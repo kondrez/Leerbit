@@ -26,11 +26,11 @@
 
 
 
-/* Allocation I2C (RTC)
-   SD card attached to I2C bus on arduino mega as follows:
- ** SDA - 20
- ** SCL - 21
-  /*
+/* Allocation I2C (RTC) 
+** SDA - 20
+** SCL - 21
+*/
+
 
 
   /*Allocation Oled Display*/
@@ -42,11 +42,11 @@ U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ SCL, /* data=*/ SD
  ** MISO - pin 50
  ** CLK - pin 52
  ** CS - pin 53
-  /*
+/*
 
-  //Constants
+//Constants
 
-  /*Allocation Leds*/
+/*Allocation Leds*/
 const int led_1_G = 46;
 const int led_1_R = 47;
 const int led_2_G = 44;
