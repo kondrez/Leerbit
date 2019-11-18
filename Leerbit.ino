@@ -1,3 +1,22 @@
+/* Schooljaar 2019-2020           
+ * Opleiding ICT NSE Leerjaar 1
+ * Project "The Challenge" 
+ * Porduct: Leerbit
+ * Projectgroep: A
+ * Klas: D1
+ * 
+ * Deelnemers:
+ * Marko Estrada Rodriguez 16138643
+ * Christiaan Calf 18129390
+ * Daniël Bleeker 19046278
+ * Lucas Dekker 19038364
+ * Eddy Al Bazze 19085834
+ */
+
+
+
+
+
 #include <Arduino.h>
 #include <U8x8lib.h>
 #include <U8g2lib.h>
@@ -7,7 +26,7 @@
 #include <RTClib.h>
 
 
-//hellooooooooooggg
+
 
 /* Allocation I2C (RTC)
  * SD card attached to I2C bus on arduino mega as follows:
