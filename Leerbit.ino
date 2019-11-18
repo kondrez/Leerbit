@@ -1,4 +1,5 @@
-/* Schooljaar 2019-2020           
+/* 
+ * Schooljaar 2019-2020           
  * Opleiding ICT NSE Leerjaar 1
  * Project "The Challenge" 
  * Porduct: Leerbit
@@ -12,9 +13,6 @@
  * Lucas Dekker 19038364
  * Eddy Al Bazze 19085834
  */
-
-
-
 
 
 #include <Arduino.h>
@@ -46,52 +44,62 @@ U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ SCL, /* data=*/ SD
  ** CS - pin 53 
 /*
 
+//Constants
 
 /*Allocation Leds*/
-int led_1_G = 2;
-int led_1_R = 3;
-int led_2_G = 4;
-int led_2_R = 5;
-int led_3_G = 6;
-int led_3_R = 7;
-int led_4_G = 8;
-int led_4_R = 9;
-int led_5_G = 10;
-int led_5_R = 11;
-int led_6_G = 12;
-int led_6_R = 13;
-int led_7_G = 14;
-int led_7_R = 15;
-int led_8_G = 16;
-int led_8_R = 17;
-int led_9_G = 18;
-int led_9_R = 19;
-int led_10_G = 20;
-int led_10_R = 21;
-int led_11_G = 22;
-int led_11_R = 23;
-int led_12_G = 24;
-int led_12_R = 25;
-int led_13_G = 26;
-int led_13_R = 27;
-int led_14_G = 28;
-int led_14_R = 29;
-int led_15_G = 30;
-int led_15_R = 31;
+const int led_1_G = 46;
+const int led_1_R = 47;
+const int led_2_G = 44;
+const int led_2_R = 45;
+const int led_3_G = 42;
+const int led_3_R = 43;
+const int led_4_G = 40;
+const int led_4_R = 41;
+const int led_5_G = 38;
+const int led_5_R = 39;
+const int led_6_G = 36;
+const int led_6_R = 37;
+const int led_7_G = 34;
+const int led_7_R = 35;
+const int led_8_G = 32;
+const int led_8_R = 33;
+const int led_9_G = A14;
+const int led_9_R = A15;
+const int led_10_G = A12;
+const int led_10_R = A13;
+const int led_11_G = A10;
+const int led_11_R = A11;
+const int led_12_G = A8;
+const int led_12_R = A9;
+const int led_13_G = A6;
+const int led_13_R = A7;
+const int led_14_G = A4;
+const int led_14_R = A5;
+const int led_15_G = A2;
+const int led_15_R = A3;
 
 
 /*Allocation buttons*/
-const int buttonPinA = 33;
-const int buttonPinB = 34;
-const int buttonPinC = 35;
-const int buttonPinD = 36;
+const int buttonPinA = 19;
+const int buttonPinB = 17;
+const int buttonPinC = 15;
+const int buttonPinD = 13;
 
 /*Allocation Touch buttons*/
-const int buttonPinLeft = 37;
-const int buttonPinRight = 38;
+const int buttonPinLeft = 31;
+const int buttonPinRight = 3;
 
 /*Allocation light Sensor*/
-const int photocellPin = 39;
+const int photocellPin = A0;
+
+
+//Variables
+int lightValue;  // Store value from photoresistor (0-1023)
+
+int buttonState_A = 0;         // variable for reading the pushbutton A status
+int buttonState_B = 0;         // variable for reading the pushbutton B status
+int buttonState_C = 0;         // variable for reading the pushbutton C status
+int buttonState_D = 0;         // variable for reading the pushbutton D status
 
 
 void setup() {
@@ -157,4 +165,12 @@ void loop() {
   digitalWrite(led_2_R, HIGH); // Turn the LED 2 RED on
 
 
+  lightValue = analogRead(photocellPin);  //Store the value from the Light sensor in the variable
+
+  buttonState_A = digitalRead(buttonPinA);  //Store the state of button A in the variable
+  buttonState_B = digitalRead(buttonPinB);  //Store the state of button B in the variable
+  buttonState_C = digitalRead(buttonPinC);  //Store the state of button C in the variable
+  buttonState_D = digitalRead(buttonPinD);  //Store the state of button D in the variable
+
+    
 }
