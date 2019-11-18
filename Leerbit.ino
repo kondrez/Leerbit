@@ -1,18 +1,18 @@
-/* 
- * Schooljaar 2019-2020           
- * Opleiding ICT NSE Leerjaar 1
- * Project "The Challenge" 
- * Porduct: Leerbit
- * Projectgroep: A
- * Klas: D1
- * 
- * Deelnemers:
- * Marko Estrada Rodriguez 16138643
- * Christiaan Calf 18129390
- * Daniël Bleeker 19046278
- * Lucas Dekker 19038364
- * Eddy Al Bazze 19085834
- */
+/*
+   Schooljaar 2019-2020
+   Opleiding ICT NSE Leerjaar 1
+   Project "The Challenge"
+   Porduct: Leerbit
+   Projectgroep: A
+   Klas: D1
+
+   Deelnemers:
+   Marko Estrada Rodriguez 16138643
+   Christiaan Calf 18129390
+   Daniël Bleeker 19046278
+   Lucas Dekker 19038364
+   Eddy Al Bazze 19085834
+*/
 
 
 #include <Arduino.h>
@@ -27,26 +27,26 @@
 
 
 /* Allocation I2C (RTC)
- * SD card attached to I2C bus on arduino mega as follows:
+   SD card attached to I2C bus on arduino mega as follows:
  ** SDA - 20
  ** SCL - 21
-/*
+  /*
 
 
-/*Allocation Oled Display*/
+  /*Allocation Oled Display*/
 U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ SCL, /* data=*/ SDA, /* reset=*/ U8X8_PIN_NONE);   // All Boards without Reset of the Display
 
 /* Allocation sd card reader
- * SD card attached to SPI bus on arduino mega as follows:
+   SD card attached to SPI bus on arduino mega as follows:
  ** MOSI - pin 51
  ** MISO - pin 50
  ** CLK - pin 52
- ** CS - pin 53 
-/*
+ ** CS - pin 53
+  /*
 
-//Constants
+  //Constants
 
-/*Allocation Leds*/
+  /*Allocation Leds*/
 const int led_1_G = 46;
 const int led_1_R = 47;
 const int led_2_G = 44;
@@ -94,12 +94,15 @@ const int photocellPin = A0;
 
 
 //Variables
-int lightValue;  // Store value from photoresistor (0-1023)
+int lightValue;  // variable for storing the value from photoresistor (0-1023)
 
 int buttonState_A = 0;         // variable for reading the pushbutton A status
 int buttonState_B = 0;         // variable for reading the pushbutton B status
 int buttonState_C = 0;         // variable for reading the pushbutton C status
 int buttonState_D = 0;         // variable for reading the pushbutton D status
+
+int buttonState_Left = 0;         // variable for reading the left touchbutton status
+int buttonState_Right = 0;        // variable for reading the right touchbutton status
 
 
 void setup() {
@@ -137,7 +140,7 @@ void setup() {
   pinMode(led_15_G, OUTPUT); // Declare the LED 15 GREEN as an output
   pinMode(led_15_R, OUTPUT); // Declare the LED 15 RED as an output
 
-  
+
 
   pinMode(buttonPinA, INPUT); // Initialize the pushbutton A pin as an input
   pinMode(buttonPinB, INPUT); // Initialize the pushbutton B pin as an input
@@ -151,7 +154,7 @@ void setup() {
   pinMode(photocellPin, INPUT); // Initialize the Light sensor pin as an input
 
 
-  
+
 }
 
 void loop() {
@@ -159,7 +162,7 @@ void loop() {
   u8g2.setFont(u8g2_font_ncenB08_tr); // choose a suitable font
   u8g2.drawStr(0, 10, "Hello World!"); // write something to the internal memory
   u8g2.sendBuffer();          // transfer internal memory to the display
-  delay(1000);
+
 
   digitalWrite(led_1_G, HIGH); // Turn the LED 1 GREEN on
   digitalWrite(led_2_R, HIGH); // Turn the LED 2 RED on
@@ -172,5 +175,8 @@ void loop() {
   buttonState_C = digitalRead(buttonPinC);  //Store the state of button C in the variable
   buttonState_D = digitalRead(buttonPinD);  //Store the state of button D in the variable
 
-    
+  buttonState_Left = digitalRead(buttonPinLeft); //Store the state of left touch button in the variable
+  buttonState_Right = digitalRead(buttonPinRight); //Store the state of right touch button in the variable
+
+  delay(1000);
 }
