@@ -7,7 +7,7 @@
 #include <RTClib.h>
 
 
-//helloooooooooo
+//hellooooooooooggg
 
 /* Allocation I2C (RTC)
  * SD card attached to I2C bus on arduino mega as follows:
