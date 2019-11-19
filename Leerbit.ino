@@ -141,10 +141,10 @@ void setup() {
 
 
 
-  pinMode(buttonPinA, INPUT_PULLUP); // Initialize the pushbutton A pin as an input
-  pinMode(buttonPinB, INPUT_PULLUP); // Initialize the pushbutton B pin as an input
-  pinMode(buttonPinC, INPUT_PULLUP); // Initialize the pushbutton C pin as an input
-  pinMode(buttonPinD, INPUT_PULLUP); // Initialize the pushbutton D pin as an input
+  pinMode(buttonPinA, INPUT_PULLUP); // Initialize the pushbutton A pin as an input and enable the internal pull-up resistor
+  pinMode(buttonPinB, INPUT_PULLUP); // Initialize the pushbutton B pin as an input and enable the internal pull-up resistor
+  pinMode(buttonPinC, INPUT_PULLUP); // Initialize the pushbutton C pin as an input and enable the internal pull-up resistor
+  pinMode(buttonPinD, INPUT_PULLUP); // Initialize the pushbutton D pin as an input and enable the internal pull-up resistor
 
   pinMode(buttonPinLeft, INPUT); // Initialize the Touch button left pin as an input
   pinMode(buttonPinRight, INPUT); // Initialize the Touch button right pin as an input
