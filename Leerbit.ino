@@ -31,10 +31,9 @@
 ** SCL - 21
 */
 
-
-
   /*Allocation Oled Display*/
 U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ SCL, /* data=*/ SDA, /* reset=*/ U8X8_PIN_NONE);   // All Boards without Reset of the Display
+
 
 /* Allocation sd card reader
    SD card attached to SPI bus on arduino mega as follows:
@@ -142,10 +141,10 @@ void setup() {
 
 
 
-  pinMode(buttonPinA, INPUT); // Initialize the pushbutton A pin as an input
-  pinMode(buttonPinB, INPUT); // Initialize the pushbutton B pin as an input
-  pinMode(buttonPinC, INPUT); // Initialize the pushbutton C pin as an input
-  pinMode(buttonPinD, INPUT); // Initialize the pushbutton D pin as an input
+  pinMode(buttonPinA, INPUT_PULLUP); // Initialize the pushbutton A pin as an input
+  pinMode(buttonPinB, INPUT_PULLUP); // Initialize the pushbutton B pin as an input
+  pinMode(buttonPinC, INPUT_PULLUP); // Initialize the pushbutton C pin as an input
+  pinMode(buttonPinD, INPUT_PULLUP); // Initialize the pushbutton D pin as an input
 
   pinMode(buttonPinLeft, INPUT); // Initialize the Touch button left pin as an input
   pinMode(buttonPinRight, INPUT); // Initialize the Touch button right pin as an input
@@ -164,8 +163,8 @@ void loop() {
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
-  digitalWrite(led_1_G, HIGH); // Turn the LED 1 GREEN on
-  digitalWrite(led_2_R, HIGH); // Turn the LED 2 RED on
+ ++++  digitalWrite(led_7_G, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_5_G, HIGH); // Turn the LED 2 RED on
 
 
   lightValue = analogRead(photocellPin);  //Store the value from the Light sensor in the variable
