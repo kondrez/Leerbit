@@ -163,7 +163,7 @@ void loop() {
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
- ++++  digitalWrite(led_7_G, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_7_G, HIGH); // Turn the LED 1 GREEN on
   digitalWrite(led_5_G, HIGH); // Turn the LED 2 RED on
 
 
