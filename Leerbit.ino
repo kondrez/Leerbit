@@ -88,7 +88,7 @@ const int buttonPinD = 13;
 const int buttonPinLeft = 31;
 const int buttonPinRight = 3;
 
-/*Allocation light Sensor uyhuh*/
+/*Allocation light Sensor*/
 const int photocellPin = A0;
 
 
