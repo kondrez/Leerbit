@@ -78,7 +78,7 @@ const int led_15_G = A2;
 const int led_15_R = A3;
 
 
-/*Allocation buttons*/
+/*Allocation buttons dit is een aanpassing*/
 const int buttonPinA = 19;
 const int buttonPinB = 17;
 const int buttonPinC = 15;
