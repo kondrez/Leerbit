@@ -159,8 +159,9 @@ void setup() {
 
 void loop() {
   u8g2.clearBuffer();          // clear the internal memory
-  u8g2.setFont(u8g2_font_chikita_tf); // choose a suitable font
-  u8g2.drawStr(2, 18, "Hello World !!"); // write something to the internal memory
+  u8g2.setFont(u8g2_font_unifont_t_symbols); // choose a suitable font
+  u8g2.drawStr(2, 18, "HELLO WORLD !!"); // write something to the internal memory
+  u8g2.drawGlyph(5, 58, 0x21A0);
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
