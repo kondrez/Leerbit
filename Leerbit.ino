@@ -11,7 +11,7 @@
    Christiaan Calf 18129390
    Daniël Bleeker 19046278
    Lucas Dekker 19038364
-   Eddy Al Bazze 19085834
+   Eddy the man Al Bazze 19085834
 */
 
 
@@ -29,10 +29,11 @@
 /* Allocation I2C (RTC) 
 ** SDA - 20
 ** SCL - 21
+** Reset - 22
 */
 
   /*Allocation Oled Display*/
-U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ SCL, /* data=*/ SDA, /* reset=*/ U8X8_PIN_NONE);   // All Boards without Reset of the Display
+U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ SCL, /* data=*/ SDA, /* reset=*/ 22);   // All Boards without Reset of the Display
 
 
 /* Allocation sd card reader
@@ -158,13 +159,16 @@ void setup() {
 
 void loop() {
   u8g2.clearBuffer();          // clear the internal memory
-  u8g2.setFont(u8g2_font_ncenB08_tr); // choose a suitable font
-  u8g2.drawStr(0, 10, "Hello World!"); // write something to the internal memory
+  u8g2.setFont(u8g2_font_unifont_t_symbols); // choose a suitable font
+  u8g2.drawStr(2, 18, "HELLO WORLD !!"); // write something to the internal memory
+  u8g2.drawGlyph(5, 58, 0x21A0);
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
-  digitalWrite(led_7_G, HIGH); // Turn the LED 1 GREEN on
-  digitalWrite(led_5_G, HIGH); // Turn the LED 2 RED on
+  digitalWrite(led_1_R, HIGH); // Turn the LED 1 GREEN on
+  //digitalWrite(led_2_G, HIGH); // Turn the LED 2 RED on
+ // digitalWrite(led_1_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_2_G, HIGH); // Turn the LED 2 RED on
 
 
   lightValue = analogRead(photocellPin);  //Store the value from the Light sensor in the variable
