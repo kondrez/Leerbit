@@ -24,7 +24,7 @@
 #include <RTClib.h>
 
 
-//RTC_DS1307 rtc;
+//RTC_DS1307 rtc; 
 
 /* Allocation I2C (RTC)
 ** SDA - 20
@@ -162,27 +162,47 @@ void loop() {
 
   lightValue = analogRead(photocellPin);  //Store the value from the Light sensor in the variable
   u8g2.clearBuffer();          // clear the internal memory
-  u8g2.setFont(u8g2_font_6x12_me); // choose a suitable font
-  u8g2.drawStr(2, 18, "!!!! HELLO WORLD !!!!"); // write something to the internal memory
+  u8g2.setFont(u8g2_font_profont11_tf); // choose a suitable font
+  u8g2.drawStr(15, 18, "!! YO JOHNNY'S !!"); // write something to the internal memory
 
 
   char buf[4];
   sprintf (buf, "%d", lightValue);
-  u8g2.drawStr(50, 40, buf);
+  u8g2.drawStr(48, 40, buf);
   u8g2.sendBuffer();          // transfer internal memory to the display
 
   Serial.println(lightValue);
-  digitalWrite(led_1_G, HIGH); // Turn the LED 1 GREEN on
-  //digitalWrite(led_2_G, HIGH); // Turn the LED 2 RED on
-  // digitalWrite(led_1_R, HIGH); // Turn the LED 1 GREEN on
-  digitalWrite(led_2_R, HIGH); // Turn the LED 2 RED on
-
- /* Serial.print(now.hour(), DEC);
-    Serial.print(':');
-    Serial.print(now.minute(), DEC);
-    Serial.print(':');
-    Serial.print(now.second(), DEC);
-    Serial.println();*/ 
+  digitalWrite(led_1_R, HIGH); // Turn the LED 1 GREEN on
+  //digitalWrite(led_1_G, HIGH); // Turn the LED 2 RED on
+  //digitalWrite(led_2_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_2_G, HIGH); // Turn the LED 2 RED on
+  digitalWrite(led_3_R, HIGH); // Turn the LED 1 GREEN on
+  //digitalWrite(led_3_G, HIGH); // Turn the LED 2 RED on
+  //digitalWrite(led_4_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_4_G, HIGH); // Turn the LED 2 RED on
+ // digitalWrite(led_5_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_5_G, HIGH); // Turn the LED 2 RED on
+  digitalWrite(led_6_R, HIGH); // Turn the LED 1 GREEN on
+  //digitalWrite(led_6_G, HIGH); // Turn the LED 2 RED on
+  digitalWrite(led_7_R, HIGH); // Turn the LED 1 GREEN on
+  //digitalWrite(led_7_G, HIGH); // Turn the LED 2 RED on
+  digitalWrite(led_8_R, HIGH); // Turn the LED 1 GREEN on
+ // digitalWrite(led_8_G, HIGH); // Turn the LED 2 RED on
+ // digitalWrite(led_9_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_9_G, HIGH); // Turn the LED 2 RED on
+ // digitalWrite(led_10_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_10_G, HIGH); // Turn the LED 2 RED on
+ // digitalWrite(led_11_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_11_G, HIGH); // Turn the LED 2 RED on
+  digitalWrite(led_12_R, HIGH); // Turn the LED 1 GREEN on
+ // digitalWrite(led_12_G, HIGH); // Turn the LED 2 RED on
+//  digitalWrite(led_13_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_13_G, HIGH); // Turn the LED 2 RED on
+//  digitalWrite(led_14_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_14_G, HIGH); // Turn the LED 2 RED on
+  //digitalWrite(led_15_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_15_G, HIGH); // Turn the LED 2 RED on
+ 
 
 
   buttonState_A = digitalRead(buttonPinA);  //Store the state of button A in the variable
