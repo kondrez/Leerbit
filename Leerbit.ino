@@ -158,20 +158,26 @@ void setup() {
 }
 
 void loop() {
+
+  lightValue = analogRead(photocellPin);  //Store the value from the Light sensor in the variable
   u8g2.clearBuffer();          // clear the internal memory
-  u8g2.setFont(u8g2_font_unifont_t_symbols); // choose a suitable font
+  u8g2.setFont(u8g2_font_6x12_me); // choose a suitable font
   u8g2.drawStr(2, 18, "HELLO WORLD !!"); // write something to the internal memory
-  u8g2.drawGlyph(5, 58, 0x21A0);
+ // u8g2.drawStr(2, 40, lightValue);
+
+  char buf[4];
+sprintf (buf, "%d", lightValue);
+u8g2.drawStr(5, 40, buf);
   u8g2.sendBuffer();          // transfer internal memory to the display
 
-
+  Serial.println(lightValue);
   digitalWrite(led_1_R, HIGH); // Turn the LED 1 GREEN on
   //digitalWrite(led_2_G, HIGH); // Turn the LED 2 RED on
  // digitalWrite(led_1_R, HIGH); // Turn the LED 1 GREEN on
   digitalWrite(led_2_G, HIGH); // Turn the LED 2 RED on
 
 
-  lightValue = analogRead(photocellPin);  //Store the value from the Light sensor in the variable
+
 
   buttonState_A = digitalRead(buttonPinA);  //Store the state of button A in the variable
   buttonState_B = digitalRead(buttonPinB);  //Store the state of button B in the variable
@@ -181,5 +187,5 @@ void loop() {
   buttonState_Left = digitalRead(buttonPinLeft); //Store the state of left touch button in the variable
   buttonState_Right = digitalRead(buttonPinRight); //Store the state of right touch button in the variable
 
-  delay(1000);
+  delay(100);
 }
