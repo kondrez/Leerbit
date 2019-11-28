@@ -11,7 +11,7 @@
    Christiaan Calf 18129390
    Daniël Bleeker 19046278
    Lucas Dekker 19038364
-   Eddy Al Bazze 19085834
+   Eddy the man Al Bazze 19085834
 */
 
 
