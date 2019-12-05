@@ -26,7 +26,7 @@
 
 //RTC_DS1307 rtc; 
 
-/* Allocation I2C (RTC)
+/*   Allocation I2C (RTC)
 ** SDA - 20
 ** SCL - 21
 ** Reset - 22
