@@ -21,7 +21,7 @@
 #include <SD.h>
 #include <SPI.h>
 #include <Wire.h>
-#include <EBD.h>
+#include <EDB.h>
 
 
 
@@ -170,6 +170,11 @@ void loop() {
   char buf[4];
   sprintf (buf, "%d", lightValue);
   u8g2.drawStr(48, 40, buf);
+
+  u8g2.setCursor(0, 25);
+u8g2.print(buttonState_A);
+
+  
   u8g2.sendBuffer();          // transfer internal memory to the display
 
   Serial.println(lightValue);
