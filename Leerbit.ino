@@ -21,7 +21,7 @@
 #include <SD.h>
 #include <SPI.h>
 #include <Wire.h>
-#include <RTClib.h>
+//#include <RTClib.h>
 
 
 //RTC_DS1307 rtc; 
@@ -80,10 +80,10 @@ const int led_15_R = A3;
 
 
 /*Allocation buttons*/
-const int buttonPinA = 19;
-const int buttonPinB = 17;
-const int buttonPinC = 15;
-const int buttonPinD = 13;
+const int buttonPinA = 29;
+const int buttonPinB = 11;
+const int buttonPinC = 9;
+const int buttonPinD = 7;
 
 /*Allocation Touch buttons*/
 const int buttonPinLeft = 31;
@@ -158,7 +158,7 @@ void setup() {
 }
 
 void loop() {
-  //DateTime now = rtc.now();
+  
 
   lightValue = analogRead(photocellPin);  //Store the value from the Light sensor in the variable
   u8g2.clearBuffer();          // clear the internal memory
