@@ -11,7 +11,7 @@
    Christiaan Calf 18129390
    Daniël Bleeker 19046278
    Lucas Dekker 19038364
-   Eddy the man Al Bazze 19085834
+   Eddy Al Bazze 19085834
 */
 
 
@@ -24,15 +24,15 @@
 #include <RTClib.h>
 
 
+//RTC_DS1307 rtc; 
 
-
-/* Allocation I2C (RTC) 
+/* Allocation I2C (RTC)
 ** SDA - 20
 ** SCL - 21
 ** Reset - 22
 */
 
-  /*Allocation Oled Display*/
+/*Allocation Oled Display*/
 U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ SCL, /* data=*/ SDA, /* reset=*/ 22);   // All Boards without Reset of the Display
 
 
@@ -42,11 +42,11 @@ U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ SCL, /* data=*/ SD
  ** MISO - pin 50
  ** CLK - pin 52
  ** CS - pin 53
-/*
+  /*
 
-//Constants
+  //Constants
 
-/*Allocation Leds*/
+  /*Allocation Leds*/
 const int led_1_G = 46;
 const int led_1_R = 47;
 const int led_2_G = 44;
@@ -158,20 +158,52 @@ void setup() {
 }
 
 void loop() {
-  u8g2.clearBuffer();          // clear the internal memory
-  u8g2.setFont(u8g2_font_unifont_t_symbols); // choose a suitable font
-  u8g2.drawStr(2, 18, "HELLO WORLD !!"); // write something to the internal memory
-  u8g2.drawGlyph(5, 58, 0x21A0);
-  u8g2.sendBuffer();          // transfer internal memory to the display
-
-
-  digitalWrite(led_1_R, HIGH); // Turn the LED 1 GREEN on
-  //digitalWrite(led_2_G, HIGH); // Turn the LED 2 RED on
- // digitalWrite(led_1_R, HIGH); // Turn the LED 1 GREEN on
-  digitalWrite(led_2_G, HIGH); // Turn the LED 2 RED on
-
+  //DateTime now = rtc.now();
 
   lightValue = analogRead(photocellPin);  //Store the value from the Light sensor in the variable
+  u8g2.clearBuffer();          // clear the internal memory
+  u8g2.setFont(u8g2_font_profont11_tf); // choose a suitable font
+  u8g2.drawStr(15, 18, "!! YO JOHNNY'S !!"); // write something to the internal memory
+
+
+  char buf[4];
+  sprintf (buf, "%d", lightValue);
+  u8g2.drawStr(48, 40, buf);
+  u8g2.sendBuffer();          // transfer internal memory to the display
+
+  Serial.println(lightValue);
+  digitalWrite(led_1_R, HIGH); // Turn the LED 1 GREEN on
+  //digitalWrite(led_1_G, HIGH); // Turn the LED 2 RED on
+  //digitalWrite(led_2_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_2_G, HIGH); // Turn the LED 2 RED on
+  digitalWrite(led_3_R, HIGH); // Turn the LED 1 GREEN on
+  //digitalWrite(led_3_G, HIGH); // Turn the LED 2 RED on
+  //digitalWrite(led_4_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_4_G, HIGH); // Turn the LED 2 RED on
+ // digitalWrite(led_5_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_5_G, HIGH); // Turn the LED 2 RED on
+  digitalWrite(led_6_R, HIGH); // Turn the LED 1 GREEN on
+  //digitalWrite(led_6_G, HIGH); // Turn the LED 2 RED on
+  digitalWrite(led_7_R, HIGH); // Turn the LED 1 GREEN on
+  //digitalWrite(led_7_G, HIGH); // Turn the LED 2 RED on
+  digitalWrite(led_8_R, HIGH); // Turn the LED 1 GREEN on
+ // digitalWrite(led_8_G, HIGH); // Turn the LED 2 RED on
+ // digitalWrite(led_9_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_9_G, HIGH); // Turn the LED 2 RED on
+ // digitalWrite(led_10_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_10_G, HIGH); // Turn the LED 2 RED on
+ // digitalWrite(led_11_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_11_G, HIGH); // Turn the LED 2 RED on
+  digitalWrite(led_12_R, HIGH); // Turn the LED 1 GREEN on
+ // digitalWrite(led_12_G, HIGH); // Turn the LED 2 RED on
+//  digitalWrite(led_13_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_13_G, HIGH); // Turn the LED 2 RED on
+//  digitalWrite(led_14_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_14_G, HIGH); // Turn the LED 2 RED on
+  //digitalWrite(led_15_R, HIGH); // Turn the LED 1 GREEN on
+  digitalWrite(led_15_G, HIGH); // Turn the LED 2 RED on
+ 
+
 
   buttonState_A = digitalRead(buttonPinA);  //Store the state of button A in the variable
   buttonState_B = digitalRead(buttonPinB);  //Store the state of button B in the variable
@@ -181,5 +213,5 @@ void loop() {
   buttonState_Left = digitalRead(buttonPinLeft); //Store the state of left touch button in the variable
   buttonState_Right = digitalRead(buttonPinRight); //Store the state of right touch button in the variable
 
-  delay(1000);
+  delay(100);
 }
