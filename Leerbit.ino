@@ -173,6 +173,14 @@ void loop() {
 
   u8g2.setCursor(0, 35);
   u8g2.print(buttonState_A);
+  u8g2.setCursor(10, 35);
+  u8g2.print(buttonState_B);
+  u8g2.setCursor(20, 35);
+  u8g2.print(buttonState_C);
+  u8g2.setCursor(30, 35);
+  u8g2.print(buttonState_D);
+
+
 
   
   u8g2.sendBuffer();          // transfer internal memory to the display
@@ -223,5 +231,5 @@ void loop() {
   buttonState_Left = digitalRead(buttonPinLeft); //Store the state of left touch button in the variable
   buttonState_Right = digitalRead(buttonPinRight); //Store the state of right touch button in the variable
 
-  delay(100);
+
 }
