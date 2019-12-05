@@ -21,12 +21,12 @@
 #include <SD.h>
 #include <SPI.h>
 #include <Wire.h>
-//#include <RTClib.h>
 
 
-//RTC_DS1307 rtc; 
 
-/*   Allocation I2C (RTC)
+
+
+/* Allocation I2C (RTC)
 ** SDA - 20
 ** SCL - 21
 ** Reset - 22
