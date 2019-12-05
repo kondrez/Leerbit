@@ -21,6 +21,7 @@
 #include <SD.h>
 #include <SPI.h>
 #include <Wire.h>
+#include <EBD.h>
 
 
 
@@ -202,8 +203,12 @@ void loop() {
   digitalWrite(led_14_G, HIGH); // Turn the LED 2 RED on
   //digitalWrite(led_15_R, HIGH); // Turn the LED 1 GREEN on
   digitalWrite(led_15_G, HIGH); // Turn the LED 2 RED on
- 
 
+
+  Serial.println(buttonState_A);
+  Serial.println(buttonState_B);
+  Serial.println(buttonState_C);
+  Serial.println(buttonState_D);
 
   buttonState_A = digitalRead(buttonPinA);  //Store the state of button A in the variable
   buttonState_B = digitalRead(buttonPinB);  //Store the state of button B in the variable
