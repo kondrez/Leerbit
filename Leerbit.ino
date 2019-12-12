@@ -104,7 +104,7 @@ int buttonState_D = 0;         // variable for reading the pushbutton D status
 
 int buttonState_Left = 0;         // variable for reading the left touchbutton status
 int buttonState_Right = 0;        // variable for reading the right touchbutton status
-int indrukken=0;
+int indrukken = 0;
 
 
 #define gear_width 30
@@ -131,7 +131,7 @@ static const unsigned char gear_logo[] U8X8_PROGMEM = {
 
 void setup() {
   Serial.begin(9600); // Start serial communication
-  u8g2.begin(buttonState_Left,buttonState_Right,buttonState_A);  // Start oled display
+  u8g2.begin(buttonState_Left, buttonState_Right, buttonState_A); // Start oled display
 
   pinMode(led_1_G, OUTPUT); // Declare the LED 1 GREEN as an output
   pinMode(led_1_R, OUTPUT); // Declare the LED 1 RED as an output
@@ -186,17 +186,17 @@ void loop() {
 
   lightValue = analogRead(photocellPin);  //Store the value from the Light sensor in the variable
 
-indrukken=u8g2.getMenuEvent();
-Serial.println(buttonState_Left);
 
 
 
- // init_Screen();
-  Menu();
 
-  
+  // init_Screen();
+  // menu_Screen();
+  vakken_screen();
 
- // Serial.println(lightValue);
+
+
+  // Serial.println(lightValue);
   digitalWrite(led_1_R, HIGH); // Turn the LED 1 GREEN on
   //digitalWrite(led_1_G, HIGH); // Turn the LED 2 RED on
   //digitalWrite(led_2_R, HIGH); // Turn the LED 1 GREEN on
@@ -229,10 +229,10 @@ Serial.println(buttonState_Left);
   digitalWrite(led_15_G, HIGH); // Turn the LED 2 RED on
 
 
- // Serial.println(buttonState_A);
- // Serial.println(buttonState_B);
- // Serial.println(buttonState_C);
- // Serial.println(buttonState_D);
+  // Serial.println(buttonState_A);
+  // Serial.println(buttonState_B);
+  // Serial.println(buttonState_C);
+  // Serial.println(buttonState_D);
 
   buttonState_A = digitalRead(buttonPinA);  //Store the state of button A in the variable
   buttonState_B = digitalRead(buttonPinB);  //Store the state of button B in the variable
@@ -244,8 +244,8 @@ Serial.println(buttonState_Left);
 
 
 }
-void init_Screen(){
-u8g2.clearBuffer();          // clear the internal memory
+void init_Screen() {
+  u8g2.clearBuffer();          // clear the internal memory
   u8g2.setFont(u8g2_font_t0_22_me); // choose a suitable font
   u8g2.drawStr(25, 18, "LeerBit"); // write something to the internal memory
   u8g2.setDrawColor(1);
@@ -275,12 +275,26 @@ u8g2.clearBuffer();          // clear the internal memory
 
 
 }
-void Menu(){
-u8g2.clearBuffer();          // clear the internal memory
-u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
-u8g2.userInterfaceSelectionList("Menu", 2, "Vakken\nProfiel");
-u8g2.sendBuffer();          // transfer internal memory to the display
 
+
+void menu_Screen() {
+  u8g2.clearBuffer();          // clear the internal memory
+  u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
+  u8g2.userInterfaceSelectionList("Menu", 2, "Vakken\nProfiel");
+  u8g2.sendBuffer();          // transfer internal memory to the display
+
+
+
+
+
+}
+
+void vakken_screen() {
+
+  u8g2.clearBuffer();          // clear the internal memory
+  u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
+  u8g2.userInterfaceSelectionList("Vakken", 2, "Nederlands\nRekenen\nBiologie\nAlgemeen");
+  u8g2.sendBuffer();          // transfer internal memory to the display
 
 
 
