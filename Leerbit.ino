@@ -131,7 +131,7 @@ static const unsigned char gear_logo[] U8X8_PROGMEM = {
 
 void setup() {
   Serial.begin(9600); // Start serial communication
-  u8g2.begin(buttonState_Left, buttonState_Right, buttonState_A); // Start oled display
+  u8g2.begin(7, 9, 11); // Start oled display
 
   pinMode(led_1_G, OUTPUT); // Declare the LED 1 GREEN as an output
   pinMode(led_1_R, OUTPUT); // Declare the LED 1 RED as an output
@@ -177,7 +177,9 @@ void setup() {
 
   pinMode(photocellPin, INPUT); // Initialize the Light sensor pin as an input
 
+ init_Screen();
 
+ delay(5000);  
 
 }
 
@@ -190,9 +192,11 @@ void loop() {
 
 
 
-  // init_Screen();
-  // menu_Screen();
+  
+   menu_Screen();
   vakken_screen();
+  profiel_screen();
+ // vraag_Screen();
 
 
 
@@ -246,8 +250,8 @@ void loop() {
 }
 void init_Screen() {
   u8g2.clearBuffer();          // clear the internal memory
-  u8g2.setFont(u8g2_font_t0_22_me); // choose a suitable font
-  u8g2.drawStr(25, 18, "LeerBit"); // write something to the internal memory
+  u8g2.setFont(u8g2_font_helvR14_tf); // choose a suitable font
+  u8g2.drawStr(35, 18, "LeerBit"); // write something to the internal memory
   u8g2.setDrawColor(1);
   u8g2.setBitmapMode(1 /* solid */);
   u8g2.drawXBMP(50, 25, gear_width, gear_height, gear_logo);
@@ -280,7 +284,7 @@ void init_Screen() {
 void menu_Screen() {
   u8g2.clearBuffer();          // clear the internal memory
   u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
-  u8g2.userInterfaceSelectionList("Menu", 2, "Vakken\nProfiel");
+  u8g2.userInterfaceSelectionList("Hoofdmenu", 1, "Vakken\nProfielen");
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
@@ -293,9 +297,37 @@ void vakken_screen() {
 
   u8g2.clearBuffer();          // clear the internal memory
   u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
-  u8g2.userInterfaceSelectionList("Vakken", 2, "Nederlands\nRekenen\nBiologie\nAlgemeen");
+  u8g2.userInterfaceSelectionList("Vakken", 1, "Nederlands\nRekenen\nBiologie\nEngels\nKunst\nOrientatie\nAlgemene kennis");
   u8g2.sendBuffer();          // transfer internal memory to the display
 
+
+
+
+}
+void profiel_screen() {
+
+  u8g2.clearBuffer();          // clear the internal memory
+  u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
+  u8g2.userInterfaceSelectionList("Profielen", 1, "jan\nPiet\nMarieke\nKees\nLaura\nAnne\nKlaas");
+  u8g2.sendBuffer();          // transfer internal memory to the display
+
+
+
+
+}
+
+
+void vraag_Screen() {
+  u8g2.clearBuffer();          // clear the internal memory
+  u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
+  u8g2.drawStr(2, 12, "Wat is 20-5*7?"); // write something to the internal memory
+  u8g2.drawStr(2, 40, "A.105"); // write something to the internal memory
+  u8g2.drawStr(2, 53, "B.-15"); // write something to the internal memory
+  u8g2.drawStr(80, 40, "C.100"); // write something to the internal memory
+  u8g2.drawStr(80, 53, "D.85"); // write something to the internal memory
+ 
+
+  u8g2.sendBuffer();          // transfer internal memory to the display
 
 
 
