@@ -143,35 +143,26 @@ void setup() {
 
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.
-  myFile = SD.open("test.txt", FILE_WRITE);
+  myFile = SD.open("user.txt");
 
   // if the file opened okay, write to it:
   if (myFile) {
-    Serial.print("Writing to test.txt...");
-    myFile.println("testing 1, 2, 3.");
-    // close the file:
-    myFile.close();
-    Serial.println("done.");
-  } else {
-    // if the file didn't open, print an error:
-    Serial.println("error opening test.txt");
-  }
-
-  // re-open the file for reading:
-  myFile = SD.open("test.txt");
-  if (myFile) {
-    Serial.println("test.txt:");
-
-    // read from the file until there's nothing else in it:
+    Serial.println("File opened!!");
+    Serial.println("user.txt:");
     while (myFile.available()) {
       Serial.write(myFile.read());
     }
-    // close the file:
-    myFile.close();
+
+
   } else {
     // if the file didn't open, print an error:
-    Serial.println("error opening test.txt");
+    Serial.println("error opening!!");
   }
+
+
+  // close the file:
+  myFile.close();
+
 
 
 
@@ -227,7 +218,7 @@ void setup() {
 
   init_Screen(); //startup display
 
-  delay(5000);
+  delay(1000);
 
 }
 
@@ -241,11 +232,11 @@ void loop() {
 
 
 
-  menu_Screen();
-  vakken_screen();
-  profiel_screen();
-  resultaten_screen();
-  // vraag_Screen();
+  //menu_Screen();
+  //vakken_screen();
+  //profiel_screen();
+  // resultaten_screen();
+  vraag_Screen();
 
 
 
@@ -367,12 +358,13 @@ void resultaten_screen() {
 
 void vraag_Screen() {
   u8g2.clearBuffer();          // clear the internal memory
-  u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
-  u8g2.drawStr(2, 12, "Wat is 20-5*7?"); // write something to the internal memory
-  u8g2.drawStr(2, 40, "A.105"); // write something to the internal memory
-  u8g2.drawStr(2, 53, "B.-15"); // write something to the internal memory
-  u8g2.drawStr(80, 40, "C.100"); // write something to the internal memory
-  u8g2.drawStr(80, 53, "D.85"); // write something to the internal memory
+  u8g2.setFont(u8g2_font_profont10_tf); // choose a suitable font
+  u8g2.drawStr(0, 8, "1."); // write something to the internal memory
+  u8g2.drawStr(20, 8, "Wat is 20-5x7?"); // write something to the internal memory
+  u8g2.drawStr(0, 45, "A.105"); // write something to the internal memory
+  u8g2.drawStr(0, 64, "B.-15"); // write something to the internal memory
+  u8g2.drawStr(75, 45, "C.100"); // write something to the internal memory
+  u8g2.drawStr(75, 64, "D.85"); // write something to the internal memory
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
