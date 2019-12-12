@@ -1,43 +1,49 @@
-drop table leerling;
-create table Leerling(
-leerling_nummer int(5) not null,
-voor_naam varchar(20),
-achter_naam varchar(20),
-leeftijd int (2),
-primary key (leerling_nummer)
+create schema leerbit;
+
+drop table if exists leerling;
+CREATE TABLE Leerling (
+    leerling_nummer INT(5) NOT NULL,
+    voor_naam VARCHAR(20),
+    achter_naam VARCHAR(20),
+    leeftijd INT(2),
+    PRIMARY KEY (leerling_nummer)
 );
 
 
-drop table vak;
-create table vak(
-vak_naam varchar(10) not null,
-hoeveelheid_vragen int(2),
-primary key (vak_naam));
+drop table if exists vak;
+CREATE TABLE vak (
+    vak_naam VARCHAR(10) NOT NULL,
+    hoeveelheid_vragen INT(2),
+    PRIMARY KEY (vak_naam)
+);
 
-drop table vragen;
-create table vraag(
-vraag_nummer int(2) not null,
-vak_naam varchar(10) not null,
-opdracht varchar(45),
-antwoord1 varchar(20),
-antwoord2 varchar(20),
-antwoord3 varchar(20),
-antwoord4 varchar(20),
-juiste_antwoord int(1),
-primary key (vraag_nummer, vak_naam),
-foreign key (vak_naam) references vak (vak_naam)
-on delete no action
-on update cascade);
+drop table if exists vragen;
+CREATE TABLE vraag (
+    vraag_nummer INT(2) NOT NULL,
+    vak_naam VARCHAR(10) NOT NULL,
+    opdracht VARCHAR(45),
+    antwoord1 VARCHAR(20),
+    antwoord2 VARCHAR(20),
+    antwoord3 VARCHAR(20),
+    antwoord4 VARCHAR(20),
+    juiste_antwoord INT(1),
+    PRIMARY KEY (vraag_nummer , vak_naam),
+    FOREIGN KEY (vak_naam)
+        REFERENCES vak (vak_naam)
+        ON DELETE NO ACTION ON UPDATE CASCADE
+);
 
-drop table score;
-create table score(
-leerling_nummer int(5) not null,
-vak_naam varchar(10) not null,
-aantal_goed int(2),
-primary key (leerling_nummer, vak_naam),
-foreign key (vak_naam) references vak (vak_naam),
-foreign key (leerling_nummer) references leerling (leerling_nummer)
-on delete no action
-on update cascade);
+drop table if exists score;
+CREATE TABLE score (
+    leerling_nummer INT(5) NOT NULL,
+    vak_naam VARCHAR(10) NOT NULL,
+    aantal_goed INT(2),
+    PRIMARY KEY (leerling_nummer , vak_naam),
+    FOREIGN KEY (vak_naam)
+        REFERENCES vak (vak_naam),
+    FOREIGN KEY (leerling_nummer)
+        REFERENCES leerling (leerling_nummer)
+        ON DELETE NO ACTION ON UPDATE CASCADE
+);
 
 
