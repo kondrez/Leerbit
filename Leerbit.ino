@@ -22,7 +22,7 @@
 #include <SPI.h>
 #include <Wire.h>
 
-
+File myFile;
 
 
 
@@ -104,9 +104,9 @@ int buttonState_D = 0;         // variable for reading the pushbutton D status
 
 int buttonState_Left = 0;         // variable for reading the left touchbutton status
 int buttonState_Right = 0;        // variable for reading the right touchbutton status
-int indrukken = 0;
 
 
+// Startup screen
 #define gear_width 30
 #define gear_height 30
 static const unsigned char gear_logo[] U8X8_PROGMEM = {
@@ -132,6 +132,54 @@ static const unsigned char gear_logo[] U8X8_PROGMEM = {
 void setup() {
   Serial.begin(9600); // Start serial communication
   u8g2.begin(7, 9, 11); // Start oled display
+
+
+  Serial.print("Initializing SD card...");
+  if (!SD.begin(53)) {
+    Serial.println("initialization failed!");
+    return;
+  }
+  Serial.println("initialization done.");
+
+  // open the file. note that only one file can be open at a time,
+  // so you have to close this one before opening another.
+  myFile = SD.open("test.txt", FILE_WRITE);
+
+  // if the file opened okay, write to it:
+  if (myFile) {
+    Serial.print("Writing to test.txt...");
+    myFile.println("testing 1, 2, 3.");
+    // close the file:
+    myFile.close();
+    Serial.println("done.");
+  } else {
+    // if the file didn't open, print an error:
+    Serial.println("error opening test.txt");
+  }
+
+  // re-open the file for reading:
+  myFile = SD.open("test.txt");
+  if (myFile) {
+    Serial.println("test.txt:");
+
+    // read from the file until there's nothing else in it:
+    while (myFile.available()) {
+      Serial.write(myFile.read());
+    }
+    // close the file:
+    myFile.close();
+  } else {
+    // if the file didn't open, print an error:
+    Serial.println("error opening test.txt");
+  }
+
+
+
+
+
+
+
+
 
   pinMode(led_1_G, OUTPUT); // Declare the LED 1 GREEN as an output
   pinMode(led_1_R, OUTPUT); // Declare the LED 1 RED as an output
@@ -177,9 +225,9 @@ void setup() {
 
   pinMode(photocellPin, INPUT); // Initialize the Light sensor pin as an input
 
- init_Screen();
+  init_Screen(); //startup display
 
- delay(5000);  
+  delay(5000);
 
 }
 
@@ -192,51 +240,51 @@ void loop() {
 
 
 
-  
-   menu_Screen();
+
+  menu_Screen();
   vakken_screen();
   profiel_screen();
- // vraag_Screen();
+  resultaten_screen();
+  // vraag_Screen();
 
 
 
-  // Serial.println(lightValue);
-  digitalWrite(led_1_R, HIGH); // Turn the LED 1 GREEN on
-  //digitalWrite(led_1_G, HIGH); // Turn the LED 2 RED on
-  //digitalWrite(led_2_R, HIGH); // Turn the LED 1 GREEN on
-  digitalWrite(led_2_G, HIGH); // Turn the LED 2 RED on
-  digitalWrite(led_3_R, HIGH); // Turn the LED 1 GREEN on
-  //digitalWrite(led_3_G, HIGH); // Turn the LED 2 RED on
-  //digitalWrite(led_4_R, HIGH); // Turn the LED 1 GREEN on
-  digitalWrite(led_4_G, HIGH); // Turn the LED 2 RED on
-  // digitalWrite(led_5_R, HIGH); // Turn the LED 1 GREEN on
-  digitalWrite(led_5_G, HIGH); // Turn the LED 2 RED on
-  digitalWrite(led_6_R, HIGH); // Turn the LED 1 GREEN on
-  //digitalWrite(led_6_G, HIGH); // Turn the LED 2 RED on
-  digitalWrite(led_7_R, HIGH); // Turn the LED 1 GREEN on
-  //digitalWrite(led_7_G, HIGH); // Turn the LED 2 RED on
-  digitalWrite(led_8_R, HIGH); // Turn the LED 1 GREEN on
-  // digitalWrite(led_8_G, HIGH); // Turn the LED 2 RED on
-  // digitalWrite(led_9_R, HIGH); // Turn the LED 1 GREEN on
-  digitalWrite(led_9_G, HIGH); // Turn the LED 2 RED on
-  // digitalWrite(led_10_R, HIGH); // Turn the LED 1 GREEN on
-  digitalWrite(led_10_G, HIGH); // Turn the LED 2 RED on
-  // digitalWrite(led_11_R, HIGH); // Turn the LED 1 GREEN on
-  digitalWrite(led_11_G, HIGH); // Turn the LED 2 RED on
-  digitalWrite(led_12_R, HIGH); // Turn the LED 1 GREEN on
-  // digitalWrite(led_12_G, HIGH); // Turn the LED 2 RED on
-  //  digitalWrite(led_13_R, HIGH); // Turn the LED 1 GREEN on
-  digitalWrite(led_13_G, HIGH); // Turn the LED 2 RED on
-  //  digitalWrite(led_14_R, HIGH); // Turn the LED 1 GREEN on
-  digitalWrite(led_14_G, HIGH); // Turn the LED 2 RED on
-  //digitalWrite(led_15_R, HIGH); // Turn the LED 1 GREEN on
-  digitalWrite(led_15_G, HIGH); // Turn the LED 2 RED on
+  /*
+    // Serial.println(lightValue);
+    digitalWrite(led_1_R, HIGH); // Turn the LED 1 GREEN on
+    //digitalWrite(led_1_G, HIGH); // Turn the LED 2 RED on
+    //digitalWrite(led_2_R, HIGH); // Turn the LED 1 GREEN on
+    digitalWrite(led_2_G, HIGH); // Turn the LED 2 RED on
+    digitalWrite(led_3_R, HIGH); // Turn the LED 1 GREEN on
+    //digitalWrite(led_3_G, HIGH); // Turn the LED 2 RED on
+    //digitalWrite(led_4_R, HIGH); // Turn the LED 1 GREEN on
+    digitalWrite(led_4_G, HIGH); // Turn the LED 2 RED on
+    // digitalWrite(led_5_R, HIGH); // Turn the LED 1 GREEN on
+    digitalWrite(led_5_G, HIGH); // Turn the LED 2 RED on
+    digitalWrite(led_6_R, HIGH); // Turn the LED 1 GREEN on
+    //digitalWrite(led_6_G, HIGH); // Turn the LED 2 RED on
+    digitalWrite(led_7_R, HIGH); // Turn the LED 1 GREEN on
+    //digitalWrite(led_7_G, HIGH); // Turn the LED 2 RED on
+    digitalWrite(led_8_R, HIGH); // Turn the LED 1 GREEN on
+    // digitalWrite(led_8_G, HIGH); // Turn the LED 2 RED on
+    // digitalWrite(led_9_R, HIGH); // Turn the LED 1 GREEN on
+    digitalWrite(led_9_G, HIGH); // Turn the LED 2 RED on
+    // digitalWrite(led_10_R, HIGH); // Turn the LED 1 GREEN on
+    digitalWrite(led_10_G, HIGH); // Turn the LED 2 RED on
+    // digitalWrite(led_11_R, HIGH); // Turn the LED 1 GREEN on
+    digitalWrite(led_11_G, HIGH); // Turn the LED 2 RED on
+    digitalWrite(led_12_R, HIGH); // Turn the LED 1 GREEN on
+    // digitalWrite(led_12_G, HIGH); // Turn the LED 2 RED on
+    //  digitalWrite(led_13_R, HIGH); // Turn the LED 1 GREEN on
+    digitalWrite(led_13_G, HIGH); // Turn the LED 2 RED on
+    //  digitalWrite(led_14_R, HIGH); // Turn the LED 1 GREEN on
+    digitalWrite(led_14_G, HIGH); // Turn the LED 2 RED on
+    //digitalWrite(led_15_R, HIGH); // Turn the LED 1 GREEN on
+    digitalWrite(led_15_G, HIGH); // Turn the LED 2 RED on
+  */
 
 
-  // Serial.println(buttonState_A);
-  // Serial.println(buttonState_B);
-  // Serial.println(buttonState_C);
-  // Serial.println(buttonState_D);
+
 
   buttonState_A = digitalRead(buttonPinA);  //Store the state of button A in the variable
   buttonState_B = digitalRead(buttonPinB);  //Store the state of button B in the variable
@@ -248,6 +296,13 @@ void loop() {
 
 
 }
+
+
+
+
+
+
+
 void init_Screen() {
   u8g2.clearBuffer();          // clear the internal memory
   u8g2.setFont(u8g2_font_helvR14_tf); // choose a suitable font
@@ -255,25 +310,6 @@ void init_Screen() {
   u8g2.setDrawColor(1);
   u8g2.setBitmapMode(1 /* solid */);
   u8g2.drawXBMP(50, 25, gear_width, gear_height, gear_logo);
-
-
-  /*char buf[4];
-    sprintf (buf, "%d", lightValue);
-    u8g2.drawStr(48, 42, buf);
-
-    u8g2.setCursor(0, 35);
-    u8g2.print(buttonState_A);
-    u8g2.setCursor(10, 35);
-    u8g2.print(buttonState_B);
-    u8g2.setCursor(20, 35);
-    u8g2.print(buttonState_C);
-    u8g2.setCursor(30, 35);
-    u8g2.print(buttonState_D);
-  */
-
-
-
-
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
@@ -321,7 +357,7 @@ void resultaten_screen() {
   u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
   u8g2.userInterfaceSelectionList("Resultaten", 1, "Rekenen\nBiologie\nEngels\nKunst\nOrientatie\nAlgemene kennis");
   u8g2.sendBuffer();          // transfer internal memory to the display
-  
+
 
 
 
@@ -337,8 +373,6 @@ void vraag_Screen() {
   u8g2.drawStr(2, 53, "B.-15"); // write something to the internal memory
   u8g2.drawStr(80, 40, "C.100"); // write something to the internal memory
   u8g2.drawStr(80, 53, "D.85"); // write something to the internal memory
- 
-
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
