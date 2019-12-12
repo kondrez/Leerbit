@@ -284,7 +284,7 @@ void init_Screen() {
 void menu_Screen() {
   u8g2.clearBuffer();          // clear the internal memory
   u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
-  u8g2.userInterfaceSelectionList("Hoofdmenu", 1, "Vakken\nProfielen");
+  u8g2.userInterfaceSelectionList("Hoofdmenu", 1, "Vakken\nProfielen\nResultaten");
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
@@ -310,6 +310,18 @@ void profiel_screen() {
   u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
   u8g2.userInterfaceSelectionList("Profielen", 1, "jan\nPiet\nMarieke\nKees\nLaura\nAnne\nKlaas");
   u8g2.sendBuffer();          // transfer internal memory to the display
+
+
+
+
+}
+void resultaten_screen() {
+
+  u8g2.clearBuffer();          // clear the internal memory
+  u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
+  u8g2.userInterfaceSelectionList("Resultaten", 1, "Rekenen\nBiologie\nEngels\nKunst\nOrientatie\nAlgemene kennis");
+  u8g2.sendBuffer();          // transfer internal memory to the display
+  
 
 
 
