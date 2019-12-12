@@ -21,7 +21,7 @@
 #include <SD.h>
 #include <SPI.h>
 #include <Wire.h>
-#include <EDB.h>
+
 
 
 
@@ -104,11 +104,34 @@ int buttonState_D = 0;         // variable for reading the pushbutton D status
 
 int buttonState_Left = 0;         // variable for reading the left touchbutton status
 int buttonState_Right = 0;        // variable for reading the right touchbutton status
+int indrukken=0;
+
+
+#define gear_width 30
+#define gear_height 30
+static const unsigned char gear_logo[] U8X8_PROGMEM = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x07, 0x00,
+  0x00, 0x1C, 0x0F, 0x00, 0x00, 0xBC, 0x0F, 0x00, 0x00, 0xFC, 0xCF, 0x00,
+  0xE0, 0xFE, 0xFF, 0x01, 0xF0, 0x3F, 0xFF, 0x01, 0xE0, 0x07, 0xF8, 0x00,
+  0xE0, 0x03, 0xF0, 0x00, 0xC0, 0x01, 0xE0, 0x01, 0xE0, 0x00, 0xC0, 0x0F,
+  0xFC, 0x00, 0xC0, 0x0F, 0xFC, 0x00, 0xC0, 0x0F, 0xFC, 0x00, 0x80, 0x03,
+  0xF8, 0x00, 0x80, 0x01, 0xE0, 0x00, 0xC0, 0x03, 0xE0, 0x00, 0xC0, 0x07,
+  0xF0, 0x00, 0xC0, 0x0F, 0xF8, 0x01, 0xE0, 0x07, 0xF8, 0x03, 0xF0, 0x07,
+  0xF0, 0x07, 0x78, 0x00, 0x00, 0x3F, 0x7F, 0x00, 0x00, 0xFF, 0xFF, 0x00,
+  0x00, 0xFF, 0xFF, 0x00, 0x00, 0xC7, 0x63, 0x00, 0x00, 0xC2, 0x03, 0x00,
+  0x00, 0xC0, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
+
+
+
+
+
+
 
 
 void setup() {
   Serial.begin(9600); // Start serial communication
-  u8g2.begin();  // Start oled display
+  u8g2.begin(buttonState_Left,buttonState_Right,buttonState_A);  // Start oled display
 
   pinMode(led_1_G, OUTPUT); // Declare the LED 1 GREEN as an output
   pinMode(led_1_R, OUTPUT); // Declare the LED 1 RED as an output
@@ -159,33 +182,21 @@ void setup() {
 }
 
 void loop() {
-  
+
 
   lightValue = analogRead(photocellPin);  //Store the value from the Light sensor in the variable
-  u8g2.clearBuffer();          // clear the internal memory
-  u8g2.setFont(u8g2_font_profont11_tf); // choose a suitable font
-  u8g2.drawStr(15, 18, "!! YO JOHNNY'S !!"); // write something to the internal memory
+
+indrukken=u8g2.getMenuEvent();
+Serial.println(buttonState_Left);
 
 
-  char buf[4];
-  sprintf (buf, "%d", lightValue);
-  u8g2.drawStr(48, 42, buf);
 
-  u8g2.setCursor(0, 35);
-  u8g2.print(buttonState_A);
-  u8g2.setCursor(10, 35);
-  u8g2.print(buttonState_B);
-  u8g2.setCursor(20, 35);
-  u8g2.print(buttonState_C);
-  u8g2.setCursor(30, 35);
-  u8g2.print(buttonState_D);
-
-
+ // init_Screen();
+  Menu();
 
   
-  u8g2.sendBuffer();          // transfer internal memory to the display
 
-  Serial.println(lightValue);
+ // Serial.println(lightValue);
   digitalWrite(led_1_R, HIGH); // Turn the LED 1 GREEN on
   //digitalWrite(led_1_G, HIGH); // Turn the LED 2 RED on
   //digitalWrite(led_2_R, HIGH); // Turn the LED 1 GREEN on
@@ -194,34 +205,34 @@ void loop() {
   //digitalWrite(led_3_G, HIGH); // Turn the LED 2 RED on
   //digitalWrite(led_4_R, HIGH); // Turn the LED 1 GREEN on
   digitalWrite(led_4_G, HIGH); // Turn the LED 2 RED on
- // digitalWrite(led_5_R, HIGH); // Turn the LED 1 GREEN on
+  // digitalWrite(led_5_R, HIGH); // Turn the LED 1 GREEN on
   digitalWrite(led_5_G, HIGH); // Turn the LED 2 RED on
   digitalWrite(led_6_R, HIGH); // Turn the LED 1 GREEN on
   //digitalWrite(led_6_G, HIGH); // Turn the LED 2 RED on
   digitalWrite(led_7_R, HIGH); // Turn the LED 1 GREEN on
   //digitalWrite(led_7_G, HIGH); // Turn the LED 2 RED on
   digitalWrite(led_8_R, HIGH); // Turn the LED 1 GREEN on
- // digitalWrite(led_8_G, HIGH); // Turn the LED 2 RED on
- // digitalWrite(led_9_R, HIGH); // Turn the LED 1 GREEN on
+  // digitalWrite(led_8_G, HIGH); // Turn the LED 2 RED on
+  // digitalWrite(led_9_R, HIGH); // Turn the LED 1 GREEN on
   digitalWrite(led_9_G, HIGH); // Turn the LED 2 RED on
- // digitalWrite(led_10_R, HIGH); // Turn the LED 1 GREEN on
+  // digitalWrite(led_10_R, HIGH); // Turn the LED 1 GREEN on
   digitalWrite(led_10_G, HIGH); // Turn the LED 2 RED on
- // digitalWrite(led_11_R, HIGH); // Turn the LED 1 GREEN on
+  // digitalWrite(led_11_R, HIGH); // Turn the LED 1 GREEN on
   digitalWrite(led_11_G, HIGH); // Turn the LED 2 RED on
   digitalWrite(led_12_R, HIGH); // Turn the LED 1 GREEN on
- // digitalWrite(led_12_G, HIGH); // Turn the LED 2 RED on
-//  digitalWrite(led_13_R, HIGH); // Turn the LED 1 GREEN on
+  // digitalWrite(led_12_G, HIGH); // Turn the LED 2 RED on
+  //  digitalWrite(led_13_R, HIGH); // Turn the LED 1 GREEN on
   digitalWrite(led_13_G, HIGH); // Turn the LED 2 RED on
-//  digitalWrite(led_14_R, HIGH); // Turn the LED 1 GREEN on
+  //  digitalWrite(led_14_R, HIGH); // Turn the LED 1 GREEN on
   digitalWrite(led_14_G, HIGH); // Turn the LED 2 RED on
   //digitalWrite(led_15_R, HIGH); // Turn the LED 1 GREEN on
   digitalWrite(led_15_G, HIGH); // Turn the LED 2 RED on
 
 
-  Serial.println(buttonState_A);
-  Serial.println(buttonState_B);
-  Serial.println(buttonState_C);
-  Serial.println(buttonState_D);
+ // Serial.println(buttonState_A);
+ // Serial.println(buttonState_B);
+ // Serial.println(buttonState_C);
+ // Serial.println(buttonState_D);
 
   buttonState_A = digitalRead(buttonPinA);  //Store the state of button A in the variable
   buttonState_B = digitalRead(buttonPinB);  //Store the state of button B in the variable
@@ -230,6 +241,48 @@ void loop() {
 
   buttonState_Left = digitalRead(buttonPinLeft); //Store the state of left touch button in the variable
   buttonState_Right = digitalRead(buttonPinRight); //Store the state of right touch button in the variable
+
+
+}
+void init_Screen(){
+u8g2.clearBuffer();          // clear the internal memory
+  u8g2.setFont(u8g2_font_t0_22_me); // choose a suitable font
+  u8g2.drawStr(25, 18, "LeerBit"); // write something to the internal memory
+  u8g2.setDrawColor(1);
+  u8g2.setBitmapMode(1 /* solid */);
+  u8g2.drawXBMP(50, 25, gear_width, gear_height, gear_logo);
+
+
+  /*char buf[4];
+    sprintf (buf, "%d", lightValue);
+    u8g2.drawStr(48, 42, buf);
+
+    u8g2.setCursor(0, 35);
+    u8g2.print(buttonState_A);
+    u8g2.setCursor(10, 35);
+    u8g2.print(buttonState_B);
+    u8g2.setCursor(20, 35);
+    u8g2.print(buttonState_C);
+    u8g2.setCursor(30, 35);
+    u8g2.print(buttonState_D);
+  */
+
+
+
+
+  u8g2.sendBuffer();          // transfer internal memory to the display
+
+
+
+}
+void Menu(){
+u8g2.clearBuffer();          // clear the internal memory
+u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
+u8g2.userInterfaceSelectionList("Menu", 2, "Vakken\nProfiel");
+u8g2.sendBuffer();          // transfer internal memory to the display
+
+
+
 
 
 }
