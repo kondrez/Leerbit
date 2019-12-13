@@ -232,11 +232,11 @@ void loop() {
 
 
 
-  //menu_Screen();
-  //vakken_screen();
-  //profiel_screen();
-  // resultaten_screen();
-  vraag_Screen();
+  menu_Screen();
+  vakken_screen();
+  profiel_screen();
+  resultaten_screen();
+  // vraag_Screen();
 
 
 
