@@ -28,6 +28,13 @@ public class form_test {
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+
+                boolean umomgay = true;
+
+                if (umomgay) {
+                    System.out.println("ur mom gay");
+                    umomgay = false;
+                }
             }
         });
     }
