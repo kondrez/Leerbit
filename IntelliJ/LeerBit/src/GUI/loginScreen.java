@@ -37,8 +37,8 @@ public class loginScreen {
 
                 /* making a connection to the database, url is het adres van de database, met daarachter wat opties die nodig waren */
                 String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
-                String username = "root";
-                String password = "";
+                String username = "root";                   // gebruikersnaam van je mySQL server
+                String password = "";                       // wachtwoord van je mySQL server
 
                 Connection conn = null;                     // de variabel conn aanmaken, van het type connectie
                 try {
