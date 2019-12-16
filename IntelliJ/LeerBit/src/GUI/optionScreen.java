@@ -10,6 +10,7 @@ public class optionScreen {
     private JButton button_scores;
     public JPanel panel_optieScherm;
     private JLabel label_message;
+    private JButton button_export;
 
     public optionScreen(JFrame optie) {         // dit is een methode met daarin alle code voor de knoppen. met de JFrame optie als parameter zodat deze gebruikt kan worden door de methode
         button_persoonsGegevens.addActionListener(new ActionListener() {
@@ -52,5 +53,11 @@ public class optionScreen {
             }
         });
 
+        button_export.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+            }
+        });
     }
 }
