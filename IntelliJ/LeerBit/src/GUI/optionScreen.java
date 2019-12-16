@@ -8,7 +8,6 @@ public class optionScreen {
     private JButton button_persoonsGegevens;
     private JButton button_opdrachten;
     private JButton button_scores;
-    private JButton button_beoordelingen;
     public JPanel panel_optieScherm;
     private JLabel label_message;
 
@@ -52,18 +51,6 @@ public class optionScreen {
                 optie.dispose();                                                // hier word het scherm wat je verlaat afgesloten
             }
         });
-        button_beoordelingen.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // deze code word aangeroepen als er op de knop "button_beoordelingen" gedrukt word
 
-                JFrame rating = new JFrame("optie scherm");                 // dit zorgt ervoor dat de programatuur weet dat dit een scherm, of "JFrame" is.
-                rating.setContentPane(new ratingsScreen(rating).panel_ratingScherm);    // hier zeg je waaruit die JFrame gaat bestaan, dus je kiest welk panel. let op dat je de panel public maakt in je code.
-                rating.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);          // hier word gezegd wat er gebeurt als er op sluiten gedrukt word, in dit geval word het programma afgesloten
-                rating.pack();                                                  // hier worden alle gui elementen uit het bestant "optie" op dezelfde JFrame gezet
-                rating.setVisible(true);                                        // spreekt wel voor zich, hier word de JFrame "optie" zichtbaar gemaakt
-                optie.dispose();
-            }
-        });
     }
 }
