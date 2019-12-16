@@ -48,8 +48,8 @@ CREATE TABLE score (
 
 drop table if exists user;
 CREATE TABLE user (
-	id int(11),
+	id int(5) NOT NULL,
 	username varchar(25) NOT NULL,
-	password varchar(30),
+	password varchar(30) NOT NULL,
     primary key (id)
 );
