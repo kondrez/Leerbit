@@ -26,7 +26,7 @@ public class WriteIntoFileFromDatabase {
         
         String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
             String username = "root";
-            String password = "3Janine5!";
+            String password = "";
             Connection conn = null;
 
             try {

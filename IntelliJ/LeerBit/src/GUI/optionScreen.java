@@ -63,12 +63,13 @@ public class optionScreen {
         button_export.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+                writeFile();
             }
         });
     }
 
     public static void writeFile() {
+        /* deze methode leest een database uit, en zet dit daarna in een .txt bestand */
 
         List data_leerling = new List();
         List data_vragen = new List();
@@ -77,7 +78,7 @@ public class optionScreen {
 
         String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
         String username = "root";
-        String password = "";
+        String password = "3Janine5!";
         Connection conn = null;
 
         try {
@@ -86,6 +87,10 @@ public class optionScreen {
         }
         catch (SQLException ex) {
             ex.printStackTrace();
+        }
+
+        if (conn != null) {
+            System.out.println("connection succesfull!");
         }
 
         /* De tabel leerling uitlezen, en dan opzetten in het bestandje leerling.txt */
@@ -99,14 +104,15 @@ public class optionScreen {
                 String voor_naam = rs.getString("voor_naam");
                 //String achter_naam = rs.getString("achter_naam");
                 //String leeftijd = rs.getString("leeftijd");
-                System.out.println(voor_naam);
+
+                //System.out.println(voor_naam);
                 data_leerling.add(voor_naam);
-
             }
-            writeToFile((java.util.List) data_leerling, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\leerling.txt");
 
+            writeToFile((java.util.List) data_leerling, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\leerling.txt");
             rs.close();
             st.close();
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -126,14 +132,15 @@ public class optionScreen {
                 String antwoord3 = rs.getString("antwoord3");
                 String antwoord4 = rs.getString("antwoord4");
                 String juisteAntwoord = rs.getString("juiste_antwoord");
-                System.out.println(id + vak_naam + opdracht + antwoord1 + antwoord2 + antwoord3 + antwoord4 + juisteAntwoord);
+
+                //System.out.println(id + vak_naam + opdracht + antwoord1 + antwoord2 + antwoord3 + antwoord4 + juisteAntwoord);
                 data_vragen.add(id + "," + vak_naam + "," + opdracht + "," + antwoord1 + "," + antwoord2 + "," + antwoord3 + "," + antwoord4 + "," + juisteAntwoord);
-
             }
-            writeToFile((java.util.List) data_vragen, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vragen.txt");
 
+            writeToFile((java.util.List) data_vragen, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vragen.txt");
             rs.close();
             st.close();
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -147,13 +154,15 @@ public class optionScreen {
                 String id = rs.getString("leerling_nummer");
                 String vak_naam = rs.getString("vak_naam");
                 String aantal_goed = rs.getString("aantal_goed");
-                System.out.println(id + vak_naam + aantal_goed);
+
+                //System.out.println(id + vak_naam + aantal_goed);
                 data_score.add(id + "," + vak_naam + "," + aantal_goed);
             }
-            writeToFile((java.util.List) data_score, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\score.txt");
 
+            writeToFile((java.util.List) data_score, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\score.txt");
             st.close();
             rs.close();
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -166,13 +175,15 @@ public class optionScreen {
             while (rs.next()) {
                 String vak_naam = rs.getString("vak_naam");
                 String aantal_vragen = rs.getString("hoeveelheid_vragen");
-                System.out.println(vak_naam + aantal_vragen);
+
+                //System.out.println(vak_naam + aantal_vragen);
                 data_vak.add(vak_naam + "," + aantal_vragen);
             }
-            writeToFile((java.util.List) data_vak, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vak.txt");
 
+            writeToFile((java.util.List) data_vak, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vak.txt");
             st.close();
             rs.close();
+
         } catch (Exception e) {
             System.out.println(e);
         }
