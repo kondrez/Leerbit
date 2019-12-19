@@ -8,20 +8,23 @@ import java.sql.*;
 
 public class loginScreen {
     /* hier worden de gui onderdelen gedeclareerd */
-    private JPanel panel_Login;                                             // Dit is de panel, het "scherm" of de achtergrond
-    private JTextField textField_username;                                  // Dit is het textfield waar de gebruikersnaam ingevuld word
-    private JTextField textField_password;                                  // het password field waar het wachtwoord ingevuld word
-    private JLabel label_Message;                                           // Een label als onaanpasbaar tekstblokje om de gebruiker instrcutie te geven
-    private JLabel label_username;                                          // Een label als onaanpasbaar tekstblokje om de gebruiker instrcutie te geven
-    private JLabel label_password;                                          // Een label als onaanpasbaar tekstblokje om de gebruiker instrcutie te geven
-    private JButton button_submit;                                          // een knop, die, wanneer ingedrukt, controleert of het wachtwoord klopt en je doorstuurt naar de volgende pagina
+    private JPanel panel_Login;
+    private JTextField textField_username;
+    private JTextField textField_password;
+    private JLabel label_Message;
+    private JLabel label_username;
+    private JLabel label_password;
+    private JButton button_submit;
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        JFrame login = new JFrame("loginscherm");               // dit zorgt ervoor dat de programatuur weet dat dit een scherm, of "JFrame" is.
-        login.setContentPane(new loginScreen(login).panel_Login);    // hier zeg je waaruit die JFrame gaat bestaan, dus je kiest welk panel
-        login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        // hier word gezegd wat er gebeurt als er op sluiten gedrukt word, in dit geval word het programma afgesloten
-        login.pack();                                                // hier worden alle gui elementen op dezelfde JFrame gezet
-        login.setVisible(true);                                      // spreekt wel voor zich, hier word de JFrame "login" zichtbaar gemaakt
+        /* this is where the program starts running */
+        /* code hieronder bouwt een scherm op, en laat dit zien */
+
+        JFrame login = new JFrame("loginscherm");
+        login.setContentPane(new loginScreen(login).panel_Login);
+        login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        login.pack();
+        login.setVisible(true);
 
 
     }
@@ -51,6 +54,7 @@ public class loginScreen {
                 String ingevuldeUsername = textField_username.getText();
                 String query = "SELECT password FROM user WHERE username = '" + ingevuldeUsername + "';";
 
+                // eerst moet je een Statement maken
                 Statement st = null;
                 try {
                     st = conn.createStatement();
@@ -58,6 +62,7 @@ public class loginScreen {
                     ex.printStackTrace();
                 }
 
+                // daarna een resultset, dit is een lijst met alle resultaten van de query
                 ResultSet rs = null;
                 try {
                     rs = st.executeQuery(query);
@@ -65,6 +70,7 @@ public class loginScreen {
                     ex.printStackTrace();
                 }
 
+                // je moet het resultset omzetten in een string:
                 String wachtwoord = null;
                 while (true) {
                     try {
@@ -79,19 +85,19 @@ public class loginScreen {
                         ex.printStackTrace();
                     }
 
-                    System.out.format("%s\n", wachtwoord);
+                    System.out.println("password retrieval succesfull");
                 }
 
-                /* closing the database connection*/
+                // nu je het wachtwoord in een string variabel heb staan, kan je de connectie sluiten
                 try {
                     st.close();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
 
-                /* checken of de ingevoerde combinatie klopt met wat er in de database staat */
+                /* nu gaan we kijken of het wachtwoord klopt */
                 boolean ingelogd = false;
-                if (textField_password.getText().equals(wachtwoord)) {
+                if (textField_password.getText().equals(wachtwoord)) {    // "als het ingevoerde wachtwoord overeenkomt met wat er in de database staat dan:"
                     ingelogd = true;
                 }
 
@@ -106,7 +112,8 @@ public class loginScreen {
                     panel_Login.setVisible(false);
                     login.dispose();                                                      // hier word het scherm weggehaald zodra het goede wachtwoord ingevoerd word
                 } else {
-                    /* als het niet klopt, geeft deze code een foutmelding: */
+                    /* als het niet klopt, vraagt dit je om het opnieuw te proberen */
+
                     JOptionPane.showMessageDialog(null, "Wrong combination, please try again!");
                 }
 

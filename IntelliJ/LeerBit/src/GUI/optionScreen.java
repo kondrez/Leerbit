@@ -133,6 +133,7 @@ public class optionScreen {
             ResultSet rs = st.executeQuery("Select * from vragen");
 
             while (rs.next()) {
+                // eerst moet je de lijn van het resultset opdelen in strings, per kolom
                 String id = rs.getString("vraag_nummer");
                 String vak_naam = rs.getString("vak_naam");
                 String opdracht = rs.getString("opdracht");
@@ -142,6 +143,7 @@ public class optionScreen {
                 String antwoord4 = rs.getString("antwoord4");
                 String juisteAntwoord = rs.getString("juiste_antwoord");
 
+                //daarna moet je het toevoegen aan de list data_vragen
                 data_vragen.add("'" + id + "','" + vak_naam + "','" + opdracht + "','" + antwoord1 + "','" + antwoord2 + "','" + antwoord3 + "','" + antwoord4 + "','" + juisteAntwoord + "'");
             }
 
@@ -192,6 +194,7 @@ public class optionScreen {
             rs.close();
 
         } catch (Exception e) {System.out.println(e);}
+        System.out.println("export succesfull");
     }
 
     private static void writeToFile(String[] array, String path) throws IOException {
@@ -235,6 +238,7 @@ public class optionScreen {
 
             // Always close files.
             bufferedReader.close();
+            System.out.println("read " + fileName + " succesfull");
         }
         catch(FileNotFoundException ex) {
             System.out.println("Unable to open file '" + fileName + "'");
