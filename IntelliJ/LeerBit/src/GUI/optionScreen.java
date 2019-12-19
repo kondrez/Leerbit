@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.*;
-import java.util.Collections;
+import java.util.ArrayList;
 
 public class optionScreen {
     private static java.util.ArrayList list;
@@ -72,10 +72,10 @@ public class optionScreen {
     private static void writeFile() {
         /* deze methode leest een database uit, en zet dit daarna in een .txt bestand */
 
-        List data_leerling = new List();
-        List data_vragen = new List();
-        List data_score = new List();
-        List data_vak = new List();
+        java.util.List<String> data_leerling = new ArrayList<String>();
+        java.util.List<String> data_vragen = new ArrayList<String>();
+        java.util.List<String> data_score = new ArrayList<String>();
+        java.util.List<String> data_vak = new ArrayList<String>();
 
         String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
         String username = "root";
@@ -105,17 +105,14 @@ public class optionScreen {
                 //System.out.println(voor_naam);
                 data_leerling.add(voor_naam);
             }
-            System.out.println("test1");
 
             assert false;
-            writeToFile(data_leerling, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\leerling.txt");
+            writeToFile(listToArray(data_leerling), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\leerling.txt");
             rs.close();
             st.close();
 
         }
         catch (Exception e) {System.out.println(e);}
-
-        System.out.println("test2");
 
         /* De tabel vragen uitlezen, en dan omzetten in het .txt bestand vragen.txt */
 
@@ -138,7 +135,7 @@ public class optionScreen {
             }
 
             assert false;
-            writeToFile(data_vragen, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vragen.txt");
+            writeToFile(listToArray(data_vragen), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vragen.txt");
             rs.close();
             st.close();
 
@@ -155,12 +152,11 @@ public class optionScreen {
                 String vak_naam = rs.getString("vak_naam");
                 String aantal_goed = rs.getString("aantal_goed");
 
-                //System.out.println(id + vak_naam + aantal_goed);
                 data_score.add(id + "," + vak_naam + "," + aantal_goed);
             }
 
             assert false;
-            writeToFile(data_score, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\score.txt");
+            writeToFile(listToArray(data_score), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\score.txt");
             st.close();
             rs.close();
 
@@ -177,39 +173,35 @@ public class optionScreen {
                 String vak_naam = rs.getString("vak_naam");
                 String aantal_vragen = rs.getString("hoeveelheid_vragen");
 
-                //System.out.println(vak_naam + aantal_vragen);
                 data_vak.add(vak_naam + "," + aantal_vragen);
             }
 
+
+
             assert false;
-            writeToFile(data_vak, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vak.txt");
+            writeToFile(listToArray(data_vak), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vak.txt");
             st.close();
             rs.close();
 
         } catch (Exception e) {System.out.println(e);}
     }
 
-    private static void writeToFile(List data_vak, String path) throws IOException {
+    private static void writeToFile(String[] array, String path) throws IOException {
         File file = new File(path);
         BufferedWriter out = new BufferedWriter(new FileWriter(file, true));
-        while (list != null) {
-            for (Object s : list) {
-                out.write((String) s);
-                out.newLine();
-
-            }
-            out.close();
+        System.out.println(array[1]);
+        for (Object s : array) {
+            out.write((String) s);
+            out.newLine();
         }
-        System.out.println("test3");
+
+        out.close();
     }
 
+    private static String[] listToArray(java.util.List<String> list) {
+        String[] strData_Vak= new String[list.size()];
+        strData_Vak = list.toArray(strData_Vak);
 
-    /*
-    public static void enter(String bestand) {
-        List enter = new List();
-        enter.add("\n");
-        String url = "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\" + bestand + ".txt";
-        writeToFile((java.util.List) enter, url);
+        return strData_Vak;
     }
-    */
 }
