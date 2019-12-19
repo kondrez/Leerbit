@@ -79,6 +79,11 @@ public class optionScreen {
             /* deze methode importeert de .txt bestanden op de sd kaart en schrijft het naar de database */
                 String values = "'7','bart','de kale','5'";
                 String table = "leerling";
+                String[] tables = new String[] {"leerling","score","vak","vragen"};
+
+                for (int i = 0; i <= tables.length; i++) {
+                    System.out.println(tables[i]);
+                }
 
                 readTXTFile();
 
@@ -105,7 +110,7 @@ public class optionScreen {
         try {conn = DriverManager.getConnection(url, username, password);}
         catch (SQLException ex) {ex.printStackTrace();}
 
-        /* De tabel leerling uitlezen, en dan opzetten in het bestandje leerling.txt */
+        /* De tabel leerling uitlezen, en dan opzetten in het bestandje leerling.csv */
 
         try {
             assert conn != null;
@@ -119,14 +124,14 @@ public class optionScreen {
             }
 
             assert false;
-            writeToFile(listToArray(data_leerling), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\leerling.txt");
+            writeToFile(listToArray(data_leerling), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\leerling.csv");
             rs.close();
             st.close();
 
         }
         catch (Exception e) {System.out.println(e);}
 
-        /* De tabel vragen uitlezen, en dan omzetten in het .txt bestand vragen.txt */
+        /* De tabel vragen uitlezen, en dan omzetten in het .txt bestand vragen.csv */
 
         try {
             Statement st = conn.createStatement();
@@ -144,11 +149,11 @@ public class optionScreen {
                 String juisteAntwoord = rs.getString("juiste_antwoord");
 
                 //daarna moet je het toevoegen aan de list data_vragen
-                data_vragen.add("'" + id + "','" + vak_naam + "','" + opdracht + "','" + antwoord1 + "','" + antwoord2 + "','" + antwoord3 + "','" + antwoord4 + "','" + juisteAntwoord + "'");
+                data_vragen.add(id + "," + vak_naam + "," + opdracht + "," + antwoord1 + "," + antwoord2 + "," + antwoord3 + "," + antwoord4 + "," + juisteAntwoord);
             }
 
             assert false;
-            writeToFile(listToArray(data_vragen), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vragen.txt");
+            writeToFile(listToArray(data_vragen), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vragen.csv");
             rs.close();
             st.close();
 
@@ -169,7 +174,7 @@ public class optionScreen {
             }
 
             assert false;
-            writeToFile(listToArray(data_score), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\score.txt");
+            writeToFile(listToArray(data_score), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\score.csv");
             st.close();
             rs.close();
 
@@ -189,7 +194,7 @@ public class optionScreen {
             }
 
             assert false;
-            writeToFile(listToArray(data_vak), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vak.txt");
+            writeToFile(listToArray(data_vak), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vak.csv");
             st.close();
             rs.close();
 
