@@ -65,7 +65,6 @@ public class loginScreen {
                     ex.printStackTrace();
                 }
 
-
                 String wachtwoord = null;
                 while (true) {
                     try {

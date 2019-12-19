@@ -72,17 +72,17 @@ public class optionScreen {
                 writeSD();
             }
         });
+
         button_import.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             /* deze methode importeert de .txt bestanden op de sd kaart en schrijft het naar de database */
 
             readTXTFile();
+            updateDB();
             }
         });
     }
-
-    /* hieronder staan de methodes die gebruikt worden door de knoppen */
 
     private static void writeSD() {
         /* deze methode leest een database uit, en zet dit daarna in een .txt bestand */
@@ -242,4 +242,37 @@ public class optionScreen {
             System.out.println("Error reading file '"  + fileName + "'");
         }
     }
+
+    private static void updateDB() {
+        /* making a connection to the database, url is het adres van de database, met daarachter wat opties die nodig waren */
+        String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
+        String username = "root";
+        String password = "3Janine5!";
+
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url, username, password);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        String values = "'7','bart','de kale','5'";
+        String table = "leerling";
+        String query = "insert into" + table + "values (" + values + ");";
+
+        Statement st = null;
+        try {
+            st = conn.createStatement();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        ResultSet rs = null;
+        try {
+            rs = st.executeQuery(query);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }
