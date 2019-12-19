@@ -19,6 +19,7 @@ public class optionScreen {
     public JPanel panel_optieScherm;
     private JLabel label_message;
     private JButton button_export;
+    private JButton button_import;
 
     public optionScreen(JFrame optie) {
         /* dit is een methode met daarin alle code voor de knoppen. */
@@ -37,6 +38,7 @@ public class optionScreen {
                 optie.dispose();
             }
         });
+
         button_opdrachten.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -50,6 +52,7 @@ public class optionScreen {
                 optie.dispose();
             }
         });
+
         button_scores.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -67,10 +70,20 @@ public class optionScreen {
         button_export.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                /* Deze methode exporteert de database naar .txt op een microSD, dmv de writeSD methode */
+
                 writeSD();
             }
         });
+        button_import.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            /* deze methode importeert de .txt bestanden op de sd kaart en schrijft het naar de database */
+            }
+        });
     }
+
+    /* hieronder staan de methodes die gebruikt worden door de knoppen */
 
     private static void writeSD() {
         /* deze methode leest een database uit, en zet dit daarna in een .txt bestand */
@@ -100,12 +113,8 @@ public class optionScreen {
             ResultSet rs = st.executeQuery("Select voor_naam from leerling");
 
             while (rs.next()) {
-                //String id = rs.getString("leerling_nummer");
                 String voor_naam = rs.getString("voor_naam");
-                //String achter_naam = rs.getString("achter_naam");
-                //String leeftijd = rs.getString("leeftijd");
 
-                //System.out.println(voor_naam);
                 data_leerling.add(voor_naam);
             }
 
@@ -133,7 +142,6 @@ public class optionScreen {
                 String antwoord4 = rs.getString("antwoord4");
                 String juisteAntwoord = rs.getString("juiste_antwoord");
 
-                //System.out.println(id + vak_naam + opdracht + antwoord1 + antwoord2 + antwoord3 + antwoord4 + juisteAntwoord);
                 data_vragen.add(id + "," + vak_naam + "," + opdracht + "," + antwoord1 + "," + antwoord2 + "," + antwoord3 + "," + antwoord4 + "," + juisteAntwoord);
             }
 
@@ -167,7 +175,6 @@ public class optionScreen {
             System.out.println(e);
         }
 
-
         try {
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("Select * from vak");
@@ -178,8 +185,6 @@ public class optionScreen {
 
                 data_vak.add(vak_naam + "," + aantal_vragen);
             }
-
-
 
             assert false;
             writeToFile(listToArray(data_vak), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vak.txt");
@@ -193,11 +198,11 @@ public class optionScreen {
         File file = new File(path);
         BufferedWriter out = new BufferedWriter(new FileWriter(file, true));
         System.out.println(array[1]);
+
         for (Object s : array) {
             out.write((String) s);
             out.newLine();
         }
-
         out.close();
     }
 
