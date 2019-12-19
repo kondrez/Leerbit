@@ -82,11 +82,7 @@ public class optionScreen {
 
                 readTXTFile();
 
-                try {
-                    updateDB(table, values);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
+                try {updateDB(table, values);} catch (SQLException ex) {ex.printStackTrace();}
             }
         });
     }
@@ -94,11 +90,13 @@ public class optionScreen {
     private static void writeSD() {
         /* deze methode leest een database uit, en zet dit daarna in een .txt bestand */
 
+        // defineren van de list variabelen
         java.util.List<String> data_leerling = new ArrayList<String>();
         java.util.List<String> data_vragen = new ArrayList<String>();
         java.util.List<String> data_score = new ArrayList<String>();
         java.util.List<String> data_vak = new ArrayList<String>();
 
+        // connectie maken met de database
         String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
         String username = "root";
         String password = "3Janine5!";
@@ -106,10 +104,6 @@ public class optionScreen {
 
         try {conn = DriverManager.getConnection(url, username, password);}
         catch (SQLException ex) {ex.printStackTrace();}
-
-        if (conn != null) {
-            System.out.println("connection succesfull!");
-        }
 
         /* De tabel leerling uitlezen, en dan opzetten in het bestandje leerling.txt */
 
