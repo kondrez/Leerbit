@@ -38,7 +38,7 @@ public class loginScreen {
                 /* making a connection to the database, url is het adres van de database, met daarachter wat opties die nodig waren */
                 String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
                 String username = "root";                   // gebruikersnaam van je mySQL server
-                String password = "3Janine5!";                       // wachtwoord van je mySQL server
+                String password = "3Janine5!";              // wachtwoord van je mySQL server
 
                 Connection conn = null;                     // de variabel conn aanmaken, van het type connectie
                 try {
@@ -80,15 +80,17 @@ public class loginScreen {
                         ex.printStackTrace();
                     }
 
-                    // print the results
                     System.out.format("%s\n", wachtwoord);
                 }
+
+                /* closing the database connection*/
                 try {
                     st.close();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
 
+                /* checken of de ingevoerde combinatie klopt met wat er in de database staat */
                 boolean ingelogd = false;
                 if (textField_password.getText().equals(wachtwoord)) {
                     ingelogd = true;
@@ -110,6 +112,7 @@ public class loginScreen {
                 }
 
             }
+
         });
     }
 }
