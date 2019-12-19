@@ -46,4 +46,10 @@ CREATE TABLE score (
         ON DELETE NO ACTION ON UPDATE CASCADE
 );
 
-
+drop table if exists user;
+CREATE TABLE user (
+	id int(5) NOT NULL,
+	username varchar(25) NOT NULL,
+	password varchar(30) NOT NULL,
+    primary key (id)
+);
