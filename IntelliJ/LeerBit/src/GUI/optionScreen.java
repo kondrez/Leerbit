@@ -77,9 +77,16 @@ public class optionScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
             /* deze methode importeert de .txt bestanden op de sd kaart en schrijft het naar de database */
+                String values = "'7','bart','de kale','5'";
+                String table = "leerling";
 
-            readTXTFile();
-            updateDB();
+                readTXTFile();
+
+                try {
+                    updateDB(table, values);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
     }
@@ -141,7 +148,7 @@ public class optionScreen {
                 String antwoord4 = rs.getString("antwoord4");
                 String juisteAntwoord = rs.getString("juiste_antwoord");
 
-                data_vragen.add(id + "," + vak_naam + "," + opdracht + "," + antwoord1 + "," + antwoord2 + "," + antwoord3 + "," + antwoord4 + "," + juisteAntwoord);
+                data_vragen.add("'" + id + "','" + vak_naam + "','" + opdracht + "','" + antwoord1 + "','" + antwoord2 + "','" + antwoord3 + "','" + antwoord4 + "','" + juisteAntwoord + "'");
             }
 
             assert false;
@@ -243,7 +250,7 @@ public class optionScreen {
         }
     }
 
-    private static void updateDB() {
+    private static void updateDB(String table, String values) throws SQLException {
         /* making a connection to the database, url is het adres van de database, met daarachter wat opties die nodig waren */
         String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
         String username = "root";
@@ -256,8 +263,8 @@ public class optionScreen {
             ex.printStackTrace();
         }
 
-        String values = "'7','bart','de kale','5'";
-        String table = "leerling";
+
+
         String query = "insert into" + table + "values (" + values + ");";
 
         Statement st = null;
@@ -273,6 +280,9 @@ public class optionScreen {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+
+        st.close();
+        conn.close();
     }
 
 }
