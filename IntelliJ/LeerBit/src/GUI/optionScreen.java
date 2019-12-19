@@ -9,9 +9,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.Collections;
 
 public class optionScreen {
+    private static java.util.ArrayList list;
     private JButton button_persoonsGegevens;
     private JButton button_opdrachten;
     private JButton button_scores;
@@ -68,7 +69,7 @@ public class optionScreen {
         });
     }
 
-    public static void writeFile() {
+    private static void writeFile() {
         /* deze methode leest een database uit, en zet dit daarna in een .txt bestand */
 
         List data_leerling = new List();
@@ -81,13 +82,8 @@ public class optionScreen {
         String password = "3Janine5!";
         Connection conn = null;
 
-        try {
-            //Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url, username, password);
-        }
-        catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+        try {conn = DriverManager.getConnection(url, username, password);}
+        catch (SQLException ex) {ex.printStackTrace();}
 
         if (conn != null) {
             System.out.println("connection succesfull!");
@@ -96,6 +92,7 @@ public class optionScreen {
         /* De tabel leerling uitlezen, en dan opzetten in het bestandje leerling.txt */
 
         try {
+            assert conn != null;
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("Select voor_naam from leerling");
 
@@ -108,14 +105,17 @@ public class optionScreen {
                 //System.out.println(voor_naam);
                 data_leerling.add(voor_naam);
             }
+            System.out.println("test1");
 
-            writeToFile((java.util.List) data_leerling, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\leerling.txt");
+            assert false;
+            writeToFile(data_leerling, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\leerling.txt");
             rs.close();
             st.close();
 
-        } catch (Exception e) {
-            System.out.println(e);
         }
+        catch (Exception e) {System.out.println(e);}
+
+        System.out.println("test2");
 
         /* De tabel vragen uitlezen, en dan omzetten in het .txt bestand vragen.txt */
 
@@ -137,14 +137,14 @@ public class optionScreen {
                 data_vragen.add(id + "," + vak_naam + "," + opdracht + "," + antwoord1 + "," + antwoord2 + "," + antwoord3 + "," + antwoord4 + "," + juisteAntwoord);
             }
 
-            writeToFile((java.util.List) data_vragen, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vragen.txt");
+            assert false;
+            writeToFile(data_vragen, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vragen.txt");
             rs.close();
             st.close();
 
         } catch (Exception e) {
             System.out.println(e);
         }
-
 
         try {
             Statement st = conn.createStatement();
@@ -159,7 +159,8 @@ public class optionScreen {
                 data_score.add(id + "," + vak_naam + "," + aantal_goed);
             }
 
-            writeToFile((java.util.List) data_score, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\score.txt");
+            assert false;
+            writeToFile(data_score, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\score.txt");
             st.close();
             rs.close();
 
@@ -180,35 +181,35 @@ public class optionScreen {
                 data_vak.add(vak_naam + "," + aantal_vragen);
             }
 
-            writeToFile((java.util.List) data_vak, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vak.txt");
+            assert false;
+            writeToFile(data_vak, "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vak.txt");
             st.close();
             rs.close();
 
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-
+        } catch (Exception e) {System.out.println(e);}
     }
 
-    private static void writeToFile(java.util.List list, String path) {
-        BufferedWriter out = null;
-        try {
-            File leerbit = new File(path);
-            out = new BufferedWriter(new FileWriter(leerbit, true));
+    private static void writeToFile(List data_vak, String path) throws IOException {
+        File file = new File(path);
+        BufferedWriter out = new BufferedWriter(new FileWriter(file, true));
+        while (list != null) {
             for (Object s : list) {
                 out.write((String) s);
                 out.newLine();
+
             }
             out.close();
-        } catch (IOException e) {
         }
+        System.out.println("test3");
     }
+
+
+    /*
     public static void enter(String bestand) {
         List enter = new List();
         enter.add("\n");
         String url = "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\" + bestand + ".txt";
         writeToFile((java.util.List) enter, url);
     }
-
+    */
 }
