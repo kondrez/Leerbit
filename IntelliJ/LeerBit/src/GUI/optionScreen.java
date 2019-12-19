@@ -200,7 +200,6 @@ public class optionScreen {
     private static void writeToFile(String[] array, String path) throws IOException {
         File file = new File(path);
         BufferedWriter out = new BufferedWriter(new FileWriter(file, true));
-        System.out.println(array[1]);
 
         for (Object s : array) {
             out.write((String) s);
