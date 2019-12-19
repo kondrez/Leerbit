@@ -4,10 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -79,6 +76,8 @@ public class optionScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
             /* deze methode importeert de .txt bestanden op de sd kaart en schrijft het naar de database */
+
+            readTXTFile();
             }
         });
     }
@@ -211,5 +210,36 @@ public class optionScreen {
         strData_Vak = list.toArray(strData_Vak);
 
         return strData_Vak;
+    }
+
+    private static void readTXTFile() {
+        /* this method reads a .txt file */
+
+        // The name of the file to open.
+        String fileName = "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vak.txt";
+
+        // This will reference one line at a time
+        String line = null;
+
+        try {
+            // FileReader reads text files in the default encoding.
+            FileReader fileReader = new FileReader(fileName);
+
+            // Always wrap FileReader in BufferedReader.
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            while((line = bufferedReader.readLine()) != null) {
+                System.out.println(line);
+            }
+
+            // Always close files.
+            bufferedReader.close();
+        }
+        catch(FileNotFoundException ex) {
+            System.out.println("Unable to open file '" + fileName + "'");
+        }
+        catch(IOException ex) {
+            System.out.println("Error reading file '"  + fileName + "'");
+        }
     }
 }
