@@ -106,6 +106,7 @@ int buttonState_Left = 0;         // variable for reading the left touchbutton s
 int buttonState_Right = 0;        // variable for reading the right touchbutton status
 int menu_state;
 int vak_state;
+int resultaten_state;
 
 
 // Startup screen
@@ -253,8 +254,49 @@ void loop() {
 
 
   else if (menu_state == 3) {
+    resultaten_state = resultaten_screen();
+    if (resultaten_state == 1) {
+      while (1) {
 
-    resultaten_screen();
+        score_screen();
+      }
+    }
+    else if (resultaten_state == 2) {
+      while (1) {
+
+        score_screen();
+      }
+    }
+    if (resultaten_state == 3) {
+      while (1) {
+
+        score_screen();
+      }
+    }
+    else if (resultaten_state == 4) {
+      while (1) {
+
+        score_screen();
+      }
+    }
+    else if (resultaten_state == 5) {
+      while (1) {
+
+        score_screen();
+      }
+    }
+    else if (resultaten_state == 6) {
+      while (1) {
+
+        score_screen();
+      }
+    }
+    else if (resultaten_state == 7) {
+      while (1) {
+
+        score_screen();
+      }
+    }
   }
   // vraag_Screen();
 
@@ -374,7 +416,18 @@ int resultaten_screen() {
 
 
 }
+void score_screen() {
+  u8g2.clearBuffer();          // clear the internal memory
+  u8g2.setFont(u8g2_font_helvB12_tr); // choose a suitable font
+  u8g2.setCursor(0, 12);
+  u8g2.print( "vak."); // write something to the internal memory
+  u8g2.setCursor(0, 30);
+  u8g2.print("Score.");
 
+  u8g2.sendBuffer();          // transfer internal memory to the display
+
+
+}
 
 void vraag_Screen() {
   u8g2.clearBuffer();          // clear the internal memory
