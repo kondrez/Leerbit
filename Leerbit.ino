@@ -104,6 +104,8 @@ int buttonState_D = 0;         // variable for reading the pushbutton D status
 
 int buttonState_Left = 0;         // variable for reading the left touchbutton status
 int buttonState_Right = 0;        // variable for reading the right touchbutton status
+int menu_state;
+int vak_state;
 
 
 // Startup screen
@@ -131,7 +133,7 @@ static const unsigned char gear_logo[] U8X8_PROGMEM = {
 
 void setup() {
   Serial.begin(9600); // Start serial communication
-  u8g2.begin(7, 9, 11); // Start oled display
+  u8g2.begin(7, U8X8_PIN_NONE, U8X8_PIN_NONE, 31, 3, 29); // Start oled display
 
 
   Serial.print("Initializing SD card...");
@@ -210,15 +212,15 @@ void setup() {
   pinMode(buttonPinC, INPUT_PULLUP); // Initialize the pushbutton C pin as an input and enable the internal pull-up resistor
   pinMode(buttonPinD, INPUT_PULLUP); // Initialize the pushbutton D pin as an input and enable the internal pull-up resistor
 
-  pinMode(buttonPinLeft, INPUT); // Initialize the Touch button left pin as an input
-  pinMode(buttonPinRight, INPUT); // Initialize the Touch button right pin as an input
+  pinMode(buttonPinLeft, INPUT_PULLUP); // Initialize the Touch button left pin as an input
+  pinMode(buttonPinRight, INPUT_PULLUP); // Initialize the Touch button right pin as an input
 
 
   pinMode(photocellPin, INPUT); // Initialize the Light sensor pin as an input
 
   init_Screen(); //startup display
 
-  delay(1000);
+  delay(2000);
 
 }
 
@@ -227,15 +229,33 @@ void loop() {
 
   lightValue = analogRead(photocellPin);  //Store the value from the Light sensor in the variable
 
+  menu_state = menu_Screen();
+  Serial.println(menu_state);
 
 
 
+  if (menu_state == 1) {
+
+    vak_state = vakken_screen();
+    if (vak_state == 2) {
+      while (1) {
+        vraag_Screen();
+      }
+
+    }
+  }
+
+  else if (menu_state == 2) {
+
+    profiel_screen();
+  }
 
 
-  menu_Screen();
-  vakken_screen();
-  profiel_screen();
-  resultaten_screen();
+
+  else if (menu_state == 3) {
+
+    resultaten_screen();
+  }
   // vraag_Screen();
 
 
@@ -308,10 +328,10 @@ void init_Screen() {
 }
 
 
-void menu_Screen() {
+int menu_Screen() {
   u8g2.clearBuffer();          // clear the internal memory
   u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
-  u8g2.userInterfaceSelectionList("Hoofdmenu", 1, "Vakken\nProfielen\nResultaten");
+  return u8g2.userInterfaceSelectionList("Hoofdmenu", 1, "Vakken\nProfielen\nResultaten");
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
@@ -320,33 +340,33 @@ void menu_Screen() {
 
 }
 
-void vakken_screen() {
+int vakken_screen() {
 
   u8g2.clearBuffer();          // clear the internal memory
   u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
-  u8g2.userInterfaceSelectionList("Vakken", 1, "Nederlands\nRekenen\nBiologie\nEngels\nKunst\nOrientatie\nAlgemene kennis");
+  return  u8g2.userInterfaceSelectionList("Vakken", 1, "Nederlands\nRekenen\nBiologie\nEngels\nKunst\nOrientatie\nAlgemene kennis");
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
 
 
 }
-void profiel_screen() {
+int profiel_screen() {
 
   u8g2.clearBuffer();          // clear the internal memory
   u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
-  u8g2.userInterfaceSelectionList("Profielen", 1, "jan\nPiet\nMarieke\nKees\nLaura\nAnne\nKlaas");
+  return  u8g2.userInterfaceSelectionList("Profielen", 1, "jan\nPiet\nMarieke\nKees\nLaura\nAnne\nKlaas");
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
 
 
 }
-void resultaten_screen() {
+int resultaten_screen() {
 
   u8g2.clearBuffer();          // clear the internal memory
   u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
-  u8g2.userInterfaceSelectionList("Resultaten", 1, "Rekenen\nBiologie\nEngels\nKunst\nOrientatie\nAlgemene kennis");
+  return  u8g2.userInterfaceSelectionList("Resultaten", 1, "Rekenen\nBiologie\nEngels\nKunst\nOrientatie\nAlgemene kennis");
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
