@@ -85,9 +85,9 @@ public class optionScreen {
                     System.out.println(tables[i]);
                 }
 
-                readTXTFile();
+                try {readCSVFile();} catch (IOException ex) {ex.printStackTrace();}
 
-                try {updateDB(table, values);} catch (SQLException ex) {ex.printStackTrace();}
+                //try {updateDB(table, values);} catch (SQLException ex) {ex.printStackTrace();}
             }
         });
     }
@@ -220,35 +220,47 @@ public class optionScreen {
         return strData_Vak;
     }
 
-    private static void readTXTFile() {
-        /* this method reads a .txt file */
+    private static void readCSVFile() throws IOException {
+        /* this method reads a .csv file */
 
-        // The name of the file to open.
-        String fileName = "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vak.txt";
-
-        // This will reference one line at a time
-        String line = null;
+        BufferedReader input = null;
+        try {
+            input = new BufferedReader(new FileReader(new File("c:\\file.csv")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        Writer output = null;
+        try {
+            output = new BufferedWriter(new FileWriter(new File("c:\\file.sql")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         try {
-            // FileReader reads text files in the default encoding.
-            FileReader fileReader = new FileReader(fileName);
+            String line = null;
+            String[] st = null;
 
-            // Always wrap FileReader in BufferedReader.
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            while ((line = input.readLine()) != null) {
+                st = line.replace("\"","").split(",");
 
-            while((line = bufferedReader.readLine()) != null) {
-                System.out.println(line);
+                output.write("INSERT INTO `table` "
+                        + "(`column_id`, `column1`, `column2`) VALUES "
+                        + "(" + st[2] + ", " + st[0]  + ", " + st[1] +")"
+                        + ";"
+                        + "COMMIT;\n");
+
             }
-
-            // Always close files.
-            bufferedReader.close();
-            System.out.println("read " + fileName + " succesfull");
-        }
-        catch(FileNotFoundException ex) {
-            System.out.println("Unable to open file '" + fileName + "'");
-        }
-        catch(IOException ex) {
-            System.out.println("Error reading file '"  + fileName + "'");
+        } finally {
+            try {
+                input.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                output.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
