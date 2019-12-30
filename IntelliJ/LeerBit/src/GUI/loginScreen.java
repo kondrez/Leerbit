@@ -40,8 +40,8 @@ public class loginScreen {
 
                 /* making a connection to the database, url is het adres van de database, met daarachter wat opties die nodig waren */
                 String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
-                String username = "root";                   // gebruikersnaam van je mySQL server
-                String password = "3Janine5!";              // wachtwoord van je mySQL server
+                String username = "admin";                   // gebruikersnaam van je mySQL server
+                String password = "admin";              // wachtwoord van je mySQL server
 
                 Connection conn = null;                     // de variabel conn aanmaken, van het type connectie
                 try {
@@ -64,8 +64,8 @@ public class loginScreen {
 
                 // daarna een resultset, dit is een lijst met alle resultaten van de query
                 ResultSet rs = null;
-                try {
-                    rs = st.executeQuery(query);
+                    try {
+                        rs = st.executeQuery(query);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }

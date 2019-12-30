@@ -1,12 +1,12 @@
 package GUI;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class optionScreen {
     private static java.util.ArrayList list;
@@ -27,7 +27,11 @@ public class optionScreen {
                 /* deze code word aangeroepen als er op de knop "button_persoonsGegevens" gedrukt word, hij zal de pagina "Peronal Data" openen */
 
                 JFrame PData = new JFrame("PersoonsDataScherm");
-                PData.setContentPane(new personalDataScreen(PData).panel_PData);
+                try {
+                    PData.setContentPane(new personalDataScreen(PData).panel_PData);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
                 PData.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 PData.pack();
                 PData.setVisible(true);
@@ -69,30 +73,29 @@ public class optionScreen {
             public void actionPerformed(ActionEvent e) {
                 /* Deze methode exporteert de database naar .txt op een microSD, dmv de writeSD methode */
 
-                writeSD();
+                try {
+                    writeSD();
+                } catch (SQLException | IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 
         button_import.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            /* deze methode importeert de .txt bestanden op de sd kaart en schrijft het naar de database */
-                String values = "'7','bart','de kale','5'";
-                String table = "leerling";
-                String[] tables = new String[] {"leerling","score","vak","vragen"};
+                /* deze methode importeert de .txt bestanden op de sd kaart en schrijft het naar de database */
 
-                for (int i = 0; i <= tables.length; i++) {
-                    System.out.println(tables[i]);
+                try {
+                    readCSVFile();
+                } catch (IOException | SQLException ex) {
+                    ex.printStackTrace();
                 }
-
-                try {readCSVFile();} catch (IOException ex) {ex.printStackTrace();}
-
-                //try {updateDB(table, values);} catch (SQLException ex) {ex.printStackTrace();}
             }
         });
     }
 
-    private static void writeSD() {
+    private static void writeSD() throws SQLException, IOException {
         /* deze methode leest een database uit, en zet dit daarna in een .txt bestand */
 
         // defineren van de list variabelen
@@ -103,102 +106,81 @@ public class optionScreen {
 
         // connectie maken met de database
         String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
-        String username = "root";
-        String password = "3Janine5!";
+        String username = "admin";
+        String password = "admin";
         Connection conn = null;
 
-        try {conn = DriverManager.getConnection(url, username, password);}
-        catch (SQLException ex) {ex.printStackTrace();}
+        conn = DriverManager.getConnection(url, username, password);
 
         /* De tabel leerling uitlezen, en dan opzetten in het bestandje leerling.csv */
 
-        try {
-            assert conn != null;
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("Select voor_naam from leerling");
 
-            while (rs.next()) {
-                String voor_naam = rs.getString("voor_naam");
+        assert conn != null;
+        Statement st = conn.createStatement();
+        ResultSet rs;
+        rs = st.executeQuery("Select voor_naam from leerling");
 
-                data_leerling.add(voor_naam);
-            }
+        while (rs.next()) {
+            String voor_naam = rs.getString("voor_naam");
 
-            assert false;
-            writeToFile(listToArray(data_leerling), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\leerling.csv");
-            rs.close();
-            st.close();
-
+            data_leerling.add(voor_naam);
         }
-        catch (Exception e) {System.out.println(e);}
+
+        assert false;
+        writeToFile(listToArray(data_leerling), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\leerling.csv");
+
 
         /* De tabel vragen uitlezen, en dan omzetten in het .txt bestand vragen.csv */
+        while (rs.next()) {
+            // eerst moet je de lijn van het resultset opdelen in strings, per kolom
+            String id = rs.getString("vraag_nummer");
+            String vak_naam = rs.getString("vak_naam");
+            String opdracht = rs.getString("opdracht");
+            String antwoord1 = rs.getString("antwoord1");
+            String antwoord2 = rs.getString("antwoord2");
+            String antwoord3 = rs.getString("antwoord3");
+            String antwoord4 = rs.getString("antwoord4");
+            String juisteAntwoord = rs.getString("juiste_antwoord");
 
-        try {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("Select * from vragen");
-
-            while (rs.next()) {
-                // eerst moet je de lijn van het resultset opdelen in strings, per kolom
-                String id = rs.getString("vraag_nummer");
-                String vak_naam = rs.getString("vak_naam");
-                String opdracht = rs.getString("opdracht");
-                String antwoord1 = rs.getString("antwoord1");
-                String antwoord2 = rs.getString("antwoord2");
-                String antwoord3 = rs.getString("antwoord3");
-                String antwoord4 = rs.getString("antwoord4");
-                String juisteAntwoord = rs.getString("juiste_antwoord");
-
-                //daarna moet je het toevoegen aan de list data_vragen
-                data_vragen.add(id + "," + vak_naam + "," + opdracht + "," + antwoord1 + "," + antwoord2 + "," + antwoord3 + "," + antwoord4 + "," + juisteAntwoord);
-            }
-
-            assert false;
-            writeToFile(listToArray(data_vragen), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vragen.csv");
-            rs.close();
-            st.close();
-
-        } catch (Exception e) {
-            System.out.println(e);
+            //daarna moet je het toevoegen aan de list data_vragen
+            data_vragen.add(id + "," + vak_naam + "," + opdracht + "," + antwoord1 + "," + antwoord2 + "," + antwoord3 + "," + antwoord4 + "," + juisteAntwoord);
         }
 
-        try {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("Select * from score");
+        // en dan schijven naar het bestand
+        assert false;
+        writeToFile(listToArray(data_vragen), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vragen.csv");
 
-            while (rs.next()) {
-                String id = rs.getString("leerling_nummer");
-                String vak_naam = rs.getString("vak_naam");
-                String aantal_goed = rs.getString("aantal_goed");
+        // De tabel score uitlezen
+        rs = st.executeQuery("Select * from score");
 
-                data_score.add(id + "," + vak_naam + "," + aantal_goed);
-            }
+        while (rs.next()) {
+            String id = rs.getString("leerling_nummer");
+            String vak_naam = rs.getString("vak_naam");
+            String aantal_goed = rs.getString("aantal_goed");
 
-            assert false;
-            writeToFile(listToArray(data_score), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\score.csv");
-            st.close();
-            rs.close();
-
-        } catch (Exception e) {
-            System.out.println(e);
+            data_score.add(id + "," + vak_naam + "," + aantal_goed);
         }
 
-        try {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("Select * from vak");
+        assert false;
+        writeToFile(listToArray(data_score), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\score.csv");
 
-            while (rs.next()) {
-                String vak_naam = rs.getString("vak_naam");
-                String aantal_vragen = rs.getString("hoeveelheid_vragen");
+        // De tabel vak uitlezen
+        rs = st.executeQuery("Select * from vak");
 
-                data_vak.add(vak_naam + "," + aantal_vragen);
-            }
+        while (rs.next()) {
+            String vak_naam = rs.getString("vak_naam");
+            String aantal_vragen = rs.getString("hoeveelheid_vragen");
 
-            assert false;
-            writeToFile(listToArray(data_vak), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vak.csv");
-            st.close();
-            rs.close();
+            data_vak.add(vak_naam + "," + aantal_vragen);
+        }
 
-        } catch (Exception e) {System.out.println(e);}
+        assert false;
+        writeToFile(listToArray(data_vak), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vak.csv");
+
+        // netjes alles sluiten
+        st.close();
+        rs.close();
+        conn.close();
         System.out.println("export succesfull");
     }
 
@@ -214,89 +196,53 @@ public class optionScreen {
     }
 
     private static String[] listToArray(java.util.List<String> list) {
-        String[] strData_Vak= new String[list.size()];
+        String[] strData_Vak = new String[list.size()];
         strData_Vak = list.toArray(strData_Vak);
 
         return strData_Vak;
     }
 
-    private static void readCSVFile() throws IOException {
+    private static void readCSVFile() throws IOException, SQLException {
         /* this method reads a .csv file */
+        String query;
 
+        // connectie maken met de database
+        String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
+        String username = "admin";
+        String password = "admin";
+
+        Connection conn = DriverManager.getConnection(url, username, password);
+
+        Statement st = conn.createStatement();
+
+        // een buffer reader aanmaken, die altijd genest moeten worden met een file reader, die een bestand pad nodig heeft
         BufferedReader input = null;
-        try {
-            input = new BufferedReader(new FileReader(new File("c:\\file.csv")));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        Writer output = null;
-        try {
-            output = new BufferedWriter(new FileWriter(new File("c:\\file.sql")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        input = new BufferedReader(new FileReader(new File("C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\score.csv")));
 
+        // de oude data uit te database verweideren
+        String deleteQuery = "DELETE FROM score WHERE leerling_nummer <= 1000000;";
+        st.executeUpdate(deleteQuery);
+
+        // nieuwe data in de database zetten
         try {
             String line = null;
-            String[] st = null;
+            String[] velden = null;
 
+            // regel voor regel het bestand afgaan, en elke regel in een query omzetten en uitvoeren
             while ((line = input.readLine()) != null) {
-                st = line.replace("\"","").split(",");
 
-                output.write("INSERT INTO `table` "
-                        + "(`column_id`, `column1`, `column2`) VALUES "
-                        + "(" + st[2] + ", " + st[0]  + ", " + st[1] +")"
-                        + ";"
-                        + "COMMIT;\n");
+                // velden is een Array, en met line.replace vul je deze met de waardes, gesplit bij de ","
+                velden = line.split(",");
 
+                query = "INSERT INTO score VALUES\n"
+                        + "('" + velden[0] + "','" + velden[1] + "',' " + velden[2] + "');\n";
+                st.executeUpdate(query);
             }
         } finally {
-            try {
-                input.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                output.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            input.close();
+            st.close();
+            conn.close();
+            System.out.println("file import successfull");
         }
     }
-
-    private static void updateDB(String table, String values) throws SQLException {
-        /* making a connection to the database, url is het adres van de database, met daarachter wat opties die nodig waren */
-        String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
-        String username = "root";
-        String password = "3Janine5!";
-
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(url, username, password);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-
-
-        String query = "insert into" + table + "values (" + values + ");";
-
-        Statement st = null;
-        try {
-            st = conn.createStatement();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        ResultSet rs = null;
-        try {
-            rs = st.executeQuery(query);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        st.close();
-        conn.close();
-    }
-
 }

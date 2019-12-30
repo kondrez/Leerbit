@@ -1,8 +1,11 @@
 package GUI;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
+import java.util.Vector;
 
 public class personalDataScreen {
     private JTable table_PData;
@@ -12,7 +15,55 @@ public class personalDataScreen {
     private JButton button_submit;
     private JButton button_home;
 
-    public personalDataScreen(JFrame PData) {
+    personalDataScreen(JFrame PData) throws SQLException {
+
+
+        /* making a connection to the database, url is het adres van de database, met daarachter wat opties die nodig waren */
+        String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
+        String username = "admin";                   // gebruikersnaam van je mySQL server
+        String password = "admin";              // wachtwoord van je mySQL server
+
+        Connection conn = null;                     // de variabel conn aanmaken, van het type connectie
+        try {
+            conn = DriverManager.getConnection(url, username, password);        // hier word daarwerkelijk de connectie gemaakt
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        /* als het goed is is er nu een connectie met de databse, nu moeten we de tabel uitlezen */
+
+        // maak  de sql query als een string
+        String query = "SELECT * FROM leerling;";
+
+        // eerst moet je een Statement maken
+        Statement st = null;
+        try {
+            assert conn != null;
+            st = conn.createStatement();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        // daarna een resultset, dit is een lijst met alle resultaten van de query
+        ResultSet rs = null;
+        try {
+            assert st != null;
+            rs = st.executeQuery(query);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        // de tabel vullen, dmv de methode "buildTableModel"
+        JTable table = new JTable(buildTableModel(rs));
+
+        // Closes the Connection
+
+        st.close();
+        rs.close();
+        conn.close();
+
+        JOptionPane.showMessageDialog(null, new JScrollPane(table));
+
         button_home.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -24,5 +75,33 @@ public class personalDataScreen {
                 PData.dispose();
             }
         });
+
+
+    }
+
+    public static DefaultTableModel buildTableModel(ResultSet rs)
+            throws SQLException {
+
+        ResultSetMetaData metaData = rs.getMetaData();
+
+        // names of columns
+        Vector<String> columnNames = new Vector<String>();
+        int columnCount = metaData.getColumnCount();
+        for (int column = 1; column <= columnCount; column++) {
+            columnNames.add(metaData.getColumnName(column));
+        }
+
+        // data of the table
+        Vector<Vector<Object>> data = new Vector<>();
+        while (rs.next()) {
+            Vector<Object> vector = new Vector<Object>();
+            for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                vector.add(rs.getObject(columnIndex));
+            }
+            data.add(vector);
+        }
+
+        return new DefaultTableModel(data, columnNames);
+
     }
 }
