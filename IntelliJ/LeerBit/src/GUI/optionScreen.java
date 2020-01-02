@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class optionScreen {
     private static java.util.ArrayList list;
@@ -18,7 +17,7 @@ public class optionScreen {
     private JButton button_export;
     private JButton button_import;
 
-    public optionScreen(JFrame optie) {
+    optionScreen(JFrame optie) {
         /* dit is een methode met daarin alle code voor de knoppen. */
 
         button_persoonsGegevens.addActionListener(new ActionListener() {
@@ -98,6 +97,8 @@ public class optionScreen {
     private static void writeSD() throws SQLException, IOException {
         /* deze methode leest een database uit, en zet dit daarna in een .txt bestand */
 
+        String path = "C:\\Users\\mjnde\\Documents\\LeerBit\\";
+
         // defineren van de list variabelen
         java.util.List<String> data_leerling = new ArrayList<String>();
         java.util.List<String> data_vragen = new ArrayList<String>();
@@ -108,7 +109,7 @@ public class optionScreen {
         String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
         String username = "admin";
         String password = "admin";
-        Connection conn = null;
+        Connection conn;
 
         conn = DriverManager.getConnection(url, username, password);
 
@@ -126,8 +127,10 @@ public class optionScreen {
             data_leerling.add(voor_naam);
         }
 
+        deleteFile(path + "leerling.cvs");
+
         assert false;
-        writeToFile(listToArray(data_leerling), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\leerling.csv");
+        writeToFile(listToArray(data_leerling), path + "leerling.csv");
 
 
         /* De tabel vragen uitlezen, en dan omzetten in het .txt bestand vragen.csv */
@@ -145,10 +148,12 @@ public class optionScreen {
             //daarna moet je het toevoegen aan de list data_vragen
             data_vragen.add(id + "," + vak_naam + "," + opdracht + "," + antwoord1 + "," + antwoord2 + "," + antwoord3 + "," + antwoord4 + "," + juisteAntwoord);
         }
+        // eerst het oude bestand verweideren
+        deleteFile(path + "vragen.cvs");
 
         // en dan schijven naar het bestand
         assert false;
-        writeToFile(listToArray(data_vragen), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vragen.csv");
+        writeToFile(listToArray(data_vragen), path + "vragen.csv");
 
         // De tabel score uitlezen
         rs = st.executeQuery("Select * from score");
@@ -161,8 +166,10 @@ public class optionScreen {
             data_score.add(id + "," + vak_naam + "," + aantal_goed);
         }
 
+        deleteFile(path + "score.cvs");
+
         assert false;
-        writeToFile(listToArray(data_score), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\score.csv");
+        writeToFile(listToArray(data_score), path + "score.csv");
 
         // De tabel vak uitlezen
         rs = st.executeQuery("Select * from vak");
@@ -174,8 +181,10 @@ public class optionScreen {
             data_vak.add(vak_naam + "," + aantal_vragen);
         }
 
+        deleteFile(path + "vak.cvs");
+
         assert false;
-        writeToFile(listToArray(data_vak), "C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\vak.csv");
+        writeToFile(listToArray(data_vak), path + "vak.csv");
 
         // netjes alles sluiten
         st.close();
@@ -184,8 +193,23 @@ public class optionScreen {
         System.out.println("export succesfull");
     }
 
-    private static void writeToFile(String[] array, String path) throws IOException {
+    private static void deleteFile(String path) {
+        // deletes a file with an absolute patch
+
+        System.out.println(path);
+
         File file = new File(path);
+        boolean test = file.delete();
+
+        System.out.println(test);
+
+    }
+
+    private static void writeToFile(String[] array, String path) throws IOException {
+
+        // creating the file
+        File file = new File(path);
+
         BufferedWriter out = new BufferedWriter(new FileWriter(file, true));
 
         for (Object s : array) {
