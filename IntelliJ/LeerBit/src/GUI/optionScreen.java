@@ -97,7 +97,7 @@ public class optionScreen {
     private static void writeSD() throws SQLException, IOException {
         /* deze methode leest een database uit, en zet dit daarna in een .txt bestand */
 
-        String path = "C:\\Users\\mjnde\\Documents\\LeerBit\\";
+        String path = "C:\\test\\";
 
         // defineren van de list variabelen
         java.util.List<String> data_leerling = new ArrayList<String>();
@@ -127,7 +127,7 @@ public class optionScreen {
             data_leerling.add(voor_naam);
         }
 
-        deleteFile(path + "leerling.cvs");
+        deleteFile(path + "leerling.csv");
 
         assert false;
         writeToFile(listToArray(data_leerling), path + "leerling.csv");
@@ -149,7 +149,7 @@ public class optionScreen {
             data_vragen.add(id + "," + vak_naam + "," + opdracht + "," + antwoord1 + "," + antwoord2 + "," + antwoord3 + "," + antwoord4 + "," + juisteAntwoord);
         }
         // eerst het oude bestand verweideren
-        deleteFile(path + "vragen.cvs");
+        deleteFile(path + "vragen.csv");
 
         // en dan schijven naar het bestand
         assert false;
@@ -166,7 +166,7 @@ public class optionScreen {
             data_score.add(id + "," + vak_naam + "," + aantal_goed);
         }
 
-        deleteFile(path + "score.cvs");
+        deleteFile(path + "score.csv");
 
         assert false;
         writeToFile(listToArray(data_score), path + "score.csv");
@@ -181,7 +181,7 @@ public class optionScreen {
             data_vak.add(vak_naam + "," + aantal_vragen);
         }
 
-        deleteFile(path + "vak.cvs");
+        deleteFile(path + "vak.csv");
 
         assert false;
         writeToFile(listToArray(data_vak), path + "vak.csv");
@@ -190,7 +190,7 @@ public class optionScreen {
         st.close();
         rs.close();
         conn.close();
-        System.out.println("export succesfull");
+        System.out.println("export successful");
     }
 
     private static void deleteFile(String path) {
@@ -199,9 +199,14 @@ public class optionScreen {
         System.out.println(path);
 
         File file = new File(path);
-        boolean test = file.delete();
 
-        System.out.println(test);
+        if (file.delete()) {
+            System.out.println("Delete Successful");
+        }
+        else {
+            System.out.println("Delete failed");
+        }
+
 
     }
 
