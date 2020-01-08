@@ -20,6 +20,7 @@ public class optionScreen {
     private JButton button_addStudent;
     private JButton button_addCourse;
     private JButton button3;
+    private JTable table_Leerlingen = null;
 
     optionScreen(JFrame optie) throws SQLException {
         /* dit is een methode met daarin alle code voor de knoppen. */
@@ -28,50 +29,26 @@ public class optionScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 /* deze code word aangeroepen als er op de knop "button_persoonsGegevens" gedrukt word, hij zal de pagina "Peronal Data" openen */
-                //showPDataTable();
-                String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
-                String username = "admin";
-                String password = "admin";
-                Connection conn = null;
+                String query = "Select * from leerling";
 
-                try {
-                    conn = DriverManager.getConnection(url, username, password);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-
-                assert conn != null;
-                Statement st = null;
-                try {
-                    st = conn.createStatement();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-
+                // execute the query
                 ResultSet rs = null;
-                assert st != null;
                 try {
-                    rs = st.executeQuery("Select * from leerling");
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
+                    rs = dataBase.executeQuery(query);
+                } catch (SQLException ex) {ex.printStackTrace();}
 
-                JTable table_Leerlingen = null;
+                // construct a table model
                 try {
                     assert rs != null;
                     table_Leerlingen = new JTable(buildTableModel(rs));
                 } catch (SQLException ex) {ex.printStackTrace();}
 
-                // showing the table in a message dialog
-                JOptionPane.showMessageDialog(null, table_Leerlingen, "Your Students:", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("C:\\test\\leerbit.png"));
+                // closing the resultset
+                dataBase.closeResultSet(rs);
 
-                // closing the connections
-                try {
-                    st.close();
-                    rs.close();
-                    conn.close();
-                }
-                catch (SQLException ex) {ex.printStackTrace();}
+                // show the table in a message dialog
+                JOptionPane.showMessageDialog(null, table_Leerlingen, "Your Students:",
+                        JOptionPane.INFORMATION_MESSAGE, new ImageIcon("C:\\test\\leerbit.png"));
             }
         });
 
@@ -149,8 +126,6 @@ public class optionScreen {
                 PData.setVisible(true);
 
                 optie.dispose();
-
-
             }
         });
     }
