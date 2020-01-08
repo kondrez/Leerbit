@@ -29,7 +29,7 @@ public class loginScreen {
 
     }
 
-    private loginScreen(JFrame login) {
+    private loginScreen(JFrame login) throws SQLException {
         button_submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -40,23 +40,25 @@ public class loginScreen {
 
                 /* making a connection to the database, url is het adres van de database, met daarachter wat opties die nodig waren */
                 String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
-                String username = "admin";                   // gebruikersnaam van je mySQL server
-                String password = "admin";              // wachtwoord van je mySQL server
+                String username = "admin";
+                String password = "admin";
 
-                Connection conn = null;                     // de variabel conn aanmaken, van het type connectie
+                Connection conn = null;
                 try {
                     conn = DriverManager.getConnection(url, username, password);        // hier word daarwerkelijk de connectie gemaakt
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
 
-                /* als het goed is is er nu een connectie met de databse, nu moeten we het wachtwoord uitlezen */
+
+                /* nu moeten we het wachtwoord uitlezen */
                 String ingevuldeUsername = textField_username.getText();
                 String query = "SELECT password FROM user WHERE username = '" + ingevuldeUsername + "';";
 
-                // eerst moet je een Statement maken
+                // eerst maak je een statement
                 Statement st = null;
                 try {
+                    assert conn != null;
                     st = conn.createStatement();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -64,48 +66,42 @@ public class loginScreen {
 
                 // daarna een resultset, dit is een lijst met alle resultaten van de query
                 ResultSet rs = null;
-                    try {
-                        rs = st.executeQuery(query);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
+                try {
+                    assert st != null;
+                    rs = st.executeQuery(query);
+                } catch (SQLException ex) {ex.printStackTrace();}
 
                 // je moet het resultset omzetten in een string:
                 String wachtwoord = null;
                 while (true) {
                     try {
+                        assert rs != null;
                         if (!rs.next()) break;
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
+                    } catch (SQLException ex) {ex.printStackTrace();}
 
                     try {
                         wachtwoord = rs.getString("password");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
+                    } catch (SQLException ex) {ex.printStackTrace();}
 
                     System.out.println("password retrieval succesfull");
                 }
 
-                // nu je het wachtwoord in een string variabel heb staan, kan je de connectie sluiten
+                // nu je het wachtwoord in een string heb staan, kan je de connectie sluiten
                 try {
                     st.close();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
+                    rs.close();
+                    conn.close();
+                } catch (SQLException ex) {ex.printStackTrace();}
 
                 /* nu gaan we kijken of het wachtwoord klopt */
-                boolean ingelogd = false;
-                if (textField_password.getText().equals(wachtwoord)) {    // "als het ingevoerde wachtwoord overeenkomt met wat er in de database staat dan:"
-                    ingelogd = true;
-                }
-
-                if (ingelogd) {
+                if (textField_password.getText().equals(wachtwoord)) {
                     /* als de wachtwoord en gebruikersnaam combinatie klopt, stuurt deze code je door naar het volgende scherm: */
 
                     JFrame optie = new JFrame("optie scherm");                       // dit zorgt ervoor dat de programatuur weet dat dit een scherm, of "JFrame" is.
-                    optie.setContentPane(new optionScreen(optie).panel_optieScherm);      // hier zeg je waaruit die JFrame gaat bestaan, dus je kiest welk panel. let op dat je de panel public maakt in je code.
+                    try {
+                        optie.setContentPane(new optionScreen(optie).panel_optieScherm);      // hier zeg je waaruit die JFrame gaat bestaan, dus je kiest welk panel. let op dat je de panel public maakt in je code.
+                    } catch (SQLException ex) {ex.printStackTrace();}
+
                     optie.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);                 // hier word gezegd wat er gebeurt als er op sluiten gedrukt word, in dit geval word het programma afgesloten
                     optie.pack();                                                         // hier worden alle gui elementen uit het bestant "optie" op dezelfde JFrame gezet
                     optie.setVisible(true);                                               // spreekt wel voor zich, hier word de JFrame "optie" zichtbaar gemaakt

@@ -1,11 +1,13 @@
 package GUI;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class optionScreen {
     private static java.util.ArrayList list;
@@ -13,29 +15,63 @@ public class optionScreen {
     private JButton button_opdrachten;
     private JButton button_scores;
     public JPanel panel_optieScherm;
-    private JLabel label_message;
     private JButton button_export;
     private JButton button_import;
+    private JButton button_addStudent;
+    private JButton button_addCourse;
+    private JButton button3;
 
-    optionScreen(JFrame optie) {
+    optionScreen(JFrame optie) throws SQLException {
         /* dit is een methode met daarin alle code voor de knoppen. */
 
         button_persoonsGegevens.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 /* deze code word aangeroepen als er op de knop "button_persoonsGegevens" gedrukt word, hij zal de pagina "Peronal Data" openen */
+                //showPDataTable();
+                String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
+                String username = "admin";
+                String password = "admin";
+                Connection conn = null;
 
-                JFrame PData = new JFrame("PersoonsDataScherm");
                 try {
-                    PData.setContentPane(new personalDataScreen(PData).panel_PData);
+                    conn = DriverManager.getConnection(url, username, password);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
-                PData.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                PData.pack();
-                PData.setVisible(true);
 
-                optie.dispose();
+                assert conn != null;
+                Statement st = null;
+                try {
+                    st = conn.createStatement();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+                ResultSet rs = null;
+                assert st != null;
+                try {
+                    rs = st.executeQuery("Select * from leerling");
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+                JTable table_Leerlingen = null;
+                try {
+                    assert rs != null;
+                    table_Leerlingen = new JTable(buildTableModel(rs));
+                } catch (SQLException ex) {ex.printStackTrace();}
+
+                // showing the table in a message dialog
+                JOptionPane.showMessageDialog(null, table_Leerlingen, "Your Students:", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("C:\\test\\leerbit.png"));
+
+                // closing the connections
+                try {
+                    st.close();
+                    rs.close();
+                    conn.close();
+                }
+                catch (SQLException ex) {ex.printStackTrace();}
             }
         });
 
@@ -92,6 +128,56 @@ public class optionScreen {
                 }
             }
         });
+        button_opdrachten.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        button_addStudent.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                JFrame PData = new JFrame("PersoonsDataScherm");
+                try {
+                    PData.setContentPane(new personalDataScreen(PData).panel_PData);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+                PData.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                PData.pack();
+                PData.setVisible(true);
+
+                optie.dispose();
+
+
+            }
+        });
+    }
+
+    private static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
+
+        ResultSetMetaData metaData = rs.getMetaData();
+
+        // names of columns
+        Vector<String> columnNames = new Vector<>();
+        int columnCount = metaData.getColumnCount();
+        for (int column = 1; column <= columnCount; column++) {
+            columnNames.add(metaData.getColumnName(column));
+        }
+
+        // data of the table
+        Vector<Vector<Object>> data = new Vector<>();
+        while (rs.next()) {
+            Vector<Object> vector = new Vector<Object>();
+            for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                vector.add(rs.getObject(columnIndex));
+            }
+            data.add(vector);
+        }
+
+        return new DefaultTableModel(data, columnNames);
+
     }
 
     private static void writeSD() throws SQLException, IOException {
@@ -196,14 +282,11 @@ public class optionScreen {
     private static void deleteFile(String path) {
         // deletes a file with an absolute patch
 
-        System.out.println(path);
-
         File file = new File(path);
 
         if (file.delete()) {
             System.out.println("Delete Successful");
-        }
-        else {
+        } else {
             System.out.println("Delete failed");
         }
 
