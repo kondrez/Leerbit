@@ -21,6 +21,7 @@ public class optionScreen {
     private JButton button_addCourse;
     private JButton button3;
     private JTable table_Leerlingen = null;
+    private JTable table_opdrachten = null;
 
     optionScreen(JFrame optie) throws SQLException {
         /* dit is een methode met daarin alle code voor de knoppen. */
@@ -30,25 +31,9 @@ public class optionScreen {
             public void actionPerformed(ActionEvent e) {
                 /* deze code word aangeroepen als er op de knop "button_persoonsGegevens" gedrukt word, hij zal de pagina "Peronal Data" openen */
                 String query = "Select * from leerling";
+                String message = "Your Students:";
 
-                // execute the query
-                ResultSet rs = null;
-                try {
-                    rs = dataBase.executeQuery(query);
-                } catch (SQLException ex) {ex.printStackTrace();}
-
-                // construct a table model
-                try {
-                    assert rs != null;
-                    table_Leerlingen = new JTable(buildTableModel(rs));
-                } catch (SQLException ex) {ex.printStackTrace();}
-
-                // closing the resultset
-                dataBase.closeResultSet(rs);
-
-                // show the table in a message dialog
-                JOptionPane.showMessageDialog(null, table_Leerlingen, "Your Students:",
-                        JOptionPane.INFORMATION_MESSAGE, new ImageIcon("C:\\test\\leerbit.png"));
+                displayTable(query, message);
             }
         });
 
@@ -56,13 +41,10 @@ public class optionScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 /* deze code word aangeroepen als er op de knop "opdrachten" gedrukt word */
+                String query = "Select * from vragen";
+                String message = "Your subjects: ";
+                displayTable(query, message);
 
-                JFrame exercises = new JFrame("opdrachten scerm");
-                exercises.setContentPane(new exercisesScreen(exercises).panel_opdrachten);
-                exercises.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                exercises.pack();
-                exercises.setVisible(true);
-                optie.dispose();
             }
         });
 
@@ -105,12 +87,7 @@ public class optionScreen {
                 }
             }
         });
-        button_opdrachten.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-            }
-        });
         button_addStudent.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -128,10 +105,44 @@ public class optionScreen {
                 optie.dispose();
             }
         });
+
+        button_addCourse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame exercises = new JFrame("opdrachten scerm");
+                exercises.setContentPane(new exercisesScreen(exercises).panel_opdrachten);
+                exercises.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                exercises.pack();
+                exercises.setVisible(true);
+                optie.dispose();
+            }
+        });
+    }
+
+    private void displayTable(String query, String message) {
+        ResultSet rs = null;
+
+        // execute the query
+        try {
+            rs = dataBase.executeQuery(query);
+
+            // construct a table model
+            assert rs != null;
+            table_opdrachten = new JTable(buildTableModel(rs));
+
+            // closing the resultset
+            rs.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        // show the table in a message dialog
+        JOptionPane.showMessageDialog(panel_optieScherm, table_opdrachten, message,
+                JOptionPane.INFORMATION_MESSAGE, new ImageIcon("C:\\test\\leerbit.png"));
+
     }
 
     private static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
-
         ResultSetMetaData metaData = rs.getMetaData();
 
         // names of columns
@@ -152,7 +163,6 @@ public class optionScreen {
         }
 
         return new DefaultTableModel(data, columnNames);
-
     }
 
     private static void writeSD() throws SQLException, IOException {
@@ -291,44 +301,33 @@ public class optionScreen {
 
     private static void readCSVFile() throws IOException, SQLException {
         /* this method reads a .csv file */
-        String query;
+        String deleteQuery = "DELETE FROM score WHERE leerling_nummer <= 1000000";
+        String updateQuery = null;
 
-        // connectie maken met de database
-        String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
-        String username = "admin";
-        String password = "admin";
-
-        Connection conn = DriverManager.getConnection(url, username, password);
-
-        Statement st = conn.createStatement();
+        // de oude tuples verweideren
+        dataBase.executeUpdate(deleteQuery);
 
         // een buffer reader aanmaken, die altijd genest moeten worden met een file reader, die een bestand pad nodig heeft
         BufferedReader input = null;
         input = new BufferedReader(new FileReader(new File("C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\score.csv")));
 
-        // de oude data uit te database verweideren
-        String deleteQuery = "DELETE FROM score WHERE leerling_nummer <= 1000000;";
-        st.executeUpdate(deleteQuery);
-
         // nieuwe data in de database zetten
         try {
-            String line = null;
-            String[] velden = null;
+            String regel = null;
+            String[] elementen = null;
 
             // regel voor regel het bestand afgaan, en elke regel in een query omzetten en uitvoeren
-            while ((line = input.readLine()) != null) {
+            while ((regel = input.readLine()) != null) {
+                // velden is een Array, en met line.split vul je deze met de waardes, gesplit bij de ","
+                elementen = regel.split(",");
 
-                // velden is een Array, en met line.replace vul je deze met de waardes, gesplit bij de ","
-                velden = line.split(",");
+                updateQuery = "INSERT INTO score VALUES\n"
+                        + "('" + elementen[0] + "','" + elementen[1] + "',' " + elementen[2] + "');\n";
 
-                query = "INSERT INTO score VALUES\n"
-                        + "('" + velden[0] + "','" + velden[1] + "',' " + velden[2] + "');\n";
-                st.executeUpdate(query);
+                dataBase.executeUpdate(updateQuery);
             }
         } finally {
             input.close();
-            st.close();
-            conn.close();
             System.out.println("file import successfull");
         }
     }

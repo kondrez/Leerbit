@@ -1,15 +1,15 @@
 package GUI;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.sql.*;
 
 class dataBase {
 
-    static void closeResultSet(ResultSet rs)  {
-        try {
-            rs.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+    static void closeConnection(ResultSet rs) throws SQLException {
+        rs.close();
     }
 
     private static Connection makeConnection() {
@@ -44,9 +44,22 @@ class dataBase {
             // daarna een resultset, dit is een lijst met alle resultaten van de query
             assert st != null;
             rs = st.executeQuery(query);
-        } catch (SQLException ex) {ex.printStackTrace();}
-        conn.close();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
 
         return rs;
+    }
+
+    static void executeUpdate(String query) throws SQLException, FileNotFoundException {
+        // connectie maken met de database
+
+        Connection conn = makeConnection();
+
+        Statement st = conn.createStatement();
+
+        // de oude data uit te database verweideren
+        st.executeUpdate(query);
     }
 }
