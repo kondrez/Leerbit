@@ -44,7 +44,11 @@ public class optionScreen {
                 } catch (SQLException ex) {ex.printStackTrace();}
 
                 // closing the resultset
-                dataBase.closeResultSet(rs);
+                try {
+                    rs.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
 
                 // show the table in a message dialog
                 JOptionPane.showMessageDialog(null, table_Leerlingen, "Your Students:",
@@ -131,7 +135,6 @@ public class optionScreen {
     }
 
     private static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
-
         ResultSetMetaData metaData = rs.getMetaData();
 
         // names of columns
@@ -152,7 +155,6 @@ public class optionScreen {
         }
 
         return new DefaultTableModel(data, columnNames);
-
     }
 
     private static void writeSD() throws SQLException, IOException {

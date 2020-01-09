@@ -34,52 +34,28 @@ public class loginScreen {
             public void actionPerformed(ActionEvent e) {
                 /* de code hierin is wat er gebeurt als de knop "button_submit" word ingedrukt
                  er word gekeken of het wachtwoord klopt. zo ja, doorsturen naar volgende scherm. zo nee message laten zien met "Try again!' */
-
-
                 String ingevuldeUsername = textField_username.getText();
                 String query = "SELECT password FROM user WHERE username = '" + ingevuldeUsername + "';";
+                String wachtwoord = null;
 
-                // de query uitvoeren
-                ResultSet rs = null;
+
                 try {
-                    rs = dataBase.executeQuery(query);
-                } catch (SQLException ex) {ex.printStackTrace();}
-
-                // je moet het resultset omzetten in een string
-                String wachtwoord = rsToPassword(rs);
-
-                // nu je het wachtwoord in een string heb staan, kan je de connectie sluiten
-                try {
-                    rs.close();
-                } catch (SQLException ex) {ex.printStackTrace();}
-
+                    wachtwoord = dataBase.getPassword(query);
+                }
+                catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
                 /* nu gaan we kijken of het wachtwoord klopt */
                 String ingevuldPassword = textField_password.getText();
 
+                System.out.println("test2");
                 checkPassword(wachtwoord, ingevuldPassword, login);
             }
         });
     }
 
-    private static String rsToPassword(ResultSet rs) {
-        String wachtwoord = null;
-        while (true) {
-            try {
-                if (!rs.next()) break;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            try {
-                wachtwoord = rs.getString("password");
-            } catch (SQLException ex) {ex.printStackTrace();}
-
-            System.out.println("password retrieval succesfull");
-        }
-
-        return wachtwoord;
-    }
-
      private void checkPassword(String wachtwoord, String ingevuldWachtwoord, JFrame login) {
+         System.out.println(wachtwoord + "\t\t" + ingevuldWachtwoord);
         if (ingevuldWachtwoord.equals(wachtwoord)) {
             /* als de wachtwoord en gebruikersnaam combinatie klopt, stuurt deze code je door naar het volgende scherm: */
 
