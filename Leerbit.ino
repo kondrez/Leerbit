@@ -1,17 +1,17 @@
- /*
-   Schooljaar: 2019-2020
-   Opleiding: ICT NSE Leerjaar 1
-   Project: "The Challenge"
-   Porduct: Leerbit
-   Projectgroep: A
-   Klas: D1
+/*
+  Schooljaar: 2019-2020
+  Opleiding: ICT NSE Leerjaar 1
+  Project: "The Challenge"
+  Porduct: Leerbit
+  Projectgroep: A
+  Klas: D1
 
-   Deelnemers:
-   Marko Estrada Rodriguez 16138643
-   Christiaan Calf 18129390
-   Daniël Bleeker 19046278
-   Lucas Dekker 19038364
-   Eddy Al Bazze 19085834
+  Deelnemers:
+  Marko Estrada Rodriguez 16138643
+  Christiaan Calf 18129390
+  Daniël Bleeker 19046278
+  Lucas Dekker 19038364
+  Eddy Al Bazze 19085834
 */
 
 
@@ -221,7 +221,7 @@ void setup() {
 
   init_Screen(); //startup display
 
-  delay(2000);
+  delay(1500);
 
 }
 
@@ -239,10 +239,12 @@ void loop() {
 
     vak_state = vakken_screen();
     if (vak_state == 2) {
-      while (1) {
-        vraag_Screen();
-      }
+      for (int i = 1; i <= 15; i++) {
+        vraag_Screen(i, "Wat is het doel?", "niks", "wat", "hoe", "yup", 'b');
 
+      }
+      delay(1000);
+      clear_leds();
     }
   }
 
@@ -302,39 +304,6 @@ void loop() {
 
 
 
-  /*
-    // Serial.println(lightValue);
-    digitalWrite(led_1_R, HIGH); // Turn the LED 1 GREEN on
-    //digitalWrite(led_1_G, HIGH); // Turn the LED 2 RED on
-    //digitalWrite(led_2_R, HIGH); // Turn the LED 1 GREEN on
-    digitalWrite(led_2_G, HIGH); // Turn the LED 2 RED on
-    digitalWrite(led_3_R, HIGH); // Turn the LED 1 GREEN on
-    //digitalWrite(led_3_G, HIGH); // Turn the LED 2 RED on
-    //digitalWrite(led_4_R, HIGH); // Turn the LED 1 GREEN on
-    digitalWrite(led_4_G, HIGH); // Turn the LED 2 RED on
-    // digitalWrite(led_5_R, HIGH); // Turn the LED 1 GREEN on
-    digitalWrite(led_5_G, HIGH); // Turn the LED 2 RED on
-    digitalWrite(led_6_R, HIGH); // Turn the LED 1 GREEN on
-    //digitalWrite(led_6_G, HIGH); // Turn the LED 2 RED on
-    digitalWrite(led_7_R, HIGH); // Turn the LED 1 GREEN on
-    //digitalWrite(led_7_G, HIGH); // Turn the LED 2 RED on
-    digitalWrite(led_8_R, HIGH); // Turn the LED 1 GREEN on
-    // digitalWrite(led_8_G, HIGH); // Turn the LED 2 RED on
-    // digitalWrite(led_9_R, HIGH); // Turn the LED 1 GREEN on
-    digitalWrite(led_9_G, HIGH); // Turn the LED 2 RED on
-    // digitalWrite(led_10_R, HIGH); // Turn the LED 1 GREEN on
-    digitalWrite(led_10_G, HIGH); // Turn the LED 2 RED on
-    // digitalWrite(led_11_R, HIGH); // Turn the LED 1 GREEN on
-    digitalWrite(led_11_G, HIGH); // Turn the LED 2 RED on
-    digitalWrite(led_12_R, HIGH); // Turn the LED 1 GREEN on
-    // digitalWrite(led_12_G, HIGH); // Turn the LED 2 RED on
-    //  digitalWrite(led_13_R, HIGH); // Turn the LED 1 GREEN on
-    digitalWrite(led_13_G, HIGH); // Turn the LED 2 RED on
-    //  digitalWrite(led_14_R, HIGH); // Turn the LED 1 GREEN on
-    digitalWrite(led_14_G, HIGH); // Turn the LED 2 RED on
-    //digitalWrite(led_15_R, HIGH); // Turn the LED 1 GREEN on
-    digitalWrite(led_15_G, HIGH); // Turn the LED 2 RED on
-  */
 
 
 
@@ -429,17 +398,272 @@ void score_screen() {
 
 }
 
-void vraag_Screen() {
+void vraag_Screen(int vraagNr, char vraag[], char a1[], char a2[], char a3[], char a4[] , char Antwoord) {
+
+
+
   u8g2.clearBuffer();          // clear the internal memory
   u8g2.setFont(u8g2_font_profont10_tf); // choose a suitable font
-  u8g2.drawStr(0, 8, "1."); // write something to the internal memory
-  u8g2.drawStr(20, 8, "Wat is 20-5x7?"); // write something to the internal memory
-  u8g2.drawStr(0, 45, "A.105"); // write something to the internal memory
-  u8g2.drawStr(0, 64, "B.-15"); // write something to the internal memory
-  u8g2.drawStr(75, 45, "C.100"); // write something to the internal memory
-  u8g2.drawStr(75, 64, "D.85"); // write something to the internal memory
+  u8g2.setCursor(0, 8);
+  u8g2.print(vraagNr);
+  u8g2.print(".");
+
+  u8g2.setCursor(16, 8);
+  u8g2.print(vraag); // write something to the internal memory
+
+  u8g2.setCursor(0, 45);
+  u8g2.print("A.");
+  u8g2.print(a1); // write something to the internal memory
+  u8g2.setCursor(0, 60);
+  u8g2.print("B.");
+  u8g2.print(a2); // write something to the internal memory
+  u8g2.setCursor(75, 45);
+  u8g2.print("C.");
+  u8g2.print(a3); // write something to the internal memory
+  u8g2.setCursor(75, 60);
+  u8g2.print("D.");
+  u8g2.print(a4); // write something to the internal memory
   u8g2.sendBuffer();          // transfer internal memory to the display
+
+  check_vraag(Antwoord, vraagNr);
+
+}
+
+void check_vraag(char juisteAntwoord, int vraagNummer) {
+  char ant = 'e';
+
+
+
+  while (ant == 'e') {
+
+    buttonState_A = digitalRead(buttonPinA);  //Store the state of button A in the variable
+    buttonState_B = digitalRead(buttonPinB);  //Store the state of button B in the variable
+    buttonState_C = digitalRead(buttonPinC);  //Store the state of button C in the variable
+    buttonState_D = digitalRead(buttonPinD);  //Store the state of button D in the variable
+
+    if (buttonState_A == 0) {
+      ant = 'a';
+    }
+
+    else if (buttonState_B == 0) {
+      ant = 'b';
+    }
+
+    else if (buttonState_C == 0) {
+      ant = 'c';
+    }
+
+    else if (buttonState_D == 0) {
+      ant = 'd';
+    }
+  }
+
+
+
+  if  (ant == juisteAntwoord) {
+    turn_Led(vraagNummer, 1);
+  }
+
+  else {
+    turn_Led(vraagNummer, 0);
+  }
+
+}
+
+void turn_Led(int ledNummer, int ledkleur) {
+
+  if (ledNummer == 1 && ledkleur == 0) {
+    digitalWrite(led_1_R, HIGH);
+    digitalWrite(led_1_G, LOW);
+  }
+
+  else if (ledNummer == 1 && ledkleur == 1) {
+    digitalWrite(led_1_G, HIGH);
+    digitalWrite(led_1_R, LOW);
+  }
+
+  else if (ledNummer == 2 && ledkleur == 0) {
+    digitalWrite(led_2_R, HIGH);
+    digitalWrite(led_2_G, LOW);
+  }
+
+  else if (ledNummer == 2 && ledkleur == 1) {
+    digitalWrite(led_2_G, HIGH);
+    digitalWrite(led_2_R, LOW);
+  }
+
+  else if (ledNummer == 3 && ledkleur == 0) {
+    digitalWrite(led_3_R, HIGH);
+    digitalWrite(led_3_G, LOW);
+  }
+
+  else if (ledNummer == 3 && ledkleur == 1) {
+    digitalWrite(led_3_G, HIGH);
+    digitalWrite(led_3_R, LOW);
+  }
+
+  else if (ledNummer == 4 && ledkleur == 0) {
+    digitalWrite(led_4_R, HIGH);
+    digitalWrite(led_4_G, LOW);
+  }
+
+  else if (ledNummer == 4 && ledkleur == 1) {
+    digitalWrite(led_4_G, HIGH);
+    digitalWrite(led_4_R, LOW);
+  }
+
+  else if (ledNummer == 5 && ledkleur == 0) {
+    digitalWrite(led_5_R, HIGH);
+    digitalWrite(led_5_G, LOW);
+  }
+
+  else if (ledNummer == 5 && ledkleur == 1) {
+    digitalWrite(led_5_G, HIGH);
+    digitalWrite(led_5_R, LOW);
+  }
+
+  else if (ledNummer == 6 && ledkleur == 0) {
+    digitalWrite(led_6_R, HIGH);
+    digitalWrite(led_6_G, LOW);
+  }
+
+  else if (ledNummer == 6 && ledkleur == 1) {
+    digitalWrite(led_6_G, HIGH);
+    digitalWrite(led_6_R, LOW);
+  }
+
+  else if (ledNummer == 7 && ledkleur == 0) {
+    digitalWrite(led_7_R, HIGH);
+    digitalWrite(led_7_G, LOW);
+  }
+
+  else if (ledNummer == 7 && ledkleur == 1) {
+    digitalWrite(led_7_G, HIGH);
+    digitalWrite(led_7_R, LOW);
+  }
+
+  else if (ledNummer == 8 && ledkleur == 0) {
+    digitalWrite(led_8_R, HIGH);
+    digitalWrite(led_8_G, LOW);
+  }
+
+  else if (ledNummer == 8 && ledkleur == 1) {
+    digitalWrite(led_8_G, HIGH);
+    digitalWrite(led_8_R, LOW);
+  }
+
+  else if (ledNummer == 9 && ledkleur == 0) {
+    digitalWrite(led_9_R, HIGH);
+    digitalWrite(led_9_G, LOW);
+  }
+
+  else if (ledNummer == 9 && ledkleur == 1) {
+    digitalWrite(led_9_G, HIGH);
+    digitalWrite(led_9_R, LOW);
+  }
+
+  else if (ledNummer == 10 && ledkleur == 0) {
+    digitalWrite(led_10_R, HIGH);
+    digitalWrite(led_10_G, LOW);
+  }
+
+  else if (ledNummer == 10 && ledkleur == 1) {
+    digitalWrite(led_10_G, HIGH);
+    digitalWrite(led_10_R, LOW);
+
+  }
+
+  else if (ledNummer == 11 && ledkleur == 0) {
+    digitalWrite(led_11_R, HIGH);
+    digitalWrite(led_11_G, LOW);
+  }
+
+  else if (ledNummer == 11 && ledkleur == 1) {
+    digitalWrite(led_11_G, HIGH);
+    digitalWrite(led_11_R, LOW);
+  }
+
+  else if (ledNummer == 12 && ledkleur == 0) {
+    digitalWrite(led_12_R, HIGH);
+    digitalWrite(led_12_G, LOW);
+  }
+
+  else if (ledNummer == 12 && ledkleur == 1) {
+    digitalWrite(led_12_G, HIGH);
+    digitalWrite(led_12_R, LOW);
+  }
+
+  else if (ledNummer == 13 && ledkleur == 0) {
+    digitalWrite(led_13_R, HIGH);
+    digitalWrite(led_13_G, LOW);
+  }
+
+  else if (ledNummer == 13 && ledkleur == 1) {
+    digitalWrite(led_13_G, HIGH);
+    digitalWrite(led_13_R, LOW);
+  }
+
+  else if (ledNummer == 14 && ledkleur == 0) {
+    digitalWrite(led_14_R, HIGH);
+    digitalWrite(led_14_G, LOW);
+  }
+
+  else if (ledNummer == 14 && ledkleur == 1) {
+    digitalWrite(led_14_G, HIGH);
+    digitalWrite(led_14_R, LOW);
+  }
+
+  else if (ledNummer == 15 && ledkleur == 0) {
+    digitalWrite(led_15_R, HIGH);
+    digitalWrite(led_15_G, LOW);
+  }
+
+  else if (ledNummer == 15 && ledkleur == 1) {
+    digitalWrite(led_15_G, HIGH);
+    digitalWrite(led_15_R, LOW);
+  }
+
+}
+
+
+void clear_leds() {
+
+  digitalWrite(led_1_G, LOW);
+  digitalWrite(led_1_R, LOW);
+  digitalWrite(led_2_G, LOW);
+  digitalWrite(led_2_R, LOW);
+  digitalWrite(led_3_G, LOW);
+  digitalWrite(led_3_R, LOW);
+  digitalWrite(led_4_G, LOW);
+  digitalWrite(led_4_R, LOW);
+  digitalWrite(led_5_G, LOW);
+  digitalWrite(led_5_R, LOW);
+  digitalWrite(led_6_G, LOW);
+  digitalWrite(led_6_R, LOW);
+  digitalWrite(led_7_G, LOW);
+  digitalWrite(led_7_R, LOW);
+  digitalWrite(led_8_G, LOW);
+  digitalWrite(led_8_R, LOW);
+  digitalWrite(led_9_G, LOW);
+  digitalWrite(led_9_R, LOW);
+  digitalWrite(led_10_G, LOW);
+  digitalWrite(led_10_R, LOW);
+  digitalWrite(led_11_G, LOW);
+  digitalWrite(led_11_R, LOW);
+  digitalWrite(led_12_G, LOW);
+  digitalWrite(led_12_R, LOW);
+  digitalWrite(led_13_G, LOW);
+  digitalWrite(led_13_R, LOW);
+  digitalWrite(led_14_G, LOW);
+  digitalWrite(led_14_R, LOW);
+  digitalWrite(led_15_G, LOW);
+  digitalWrite(led_15_R, LOW);
 
 
 
 }
+
+
+
+
+
