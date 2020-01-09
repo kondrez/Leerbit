@@ -4,12 +4,13 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.Arrays;
 
-public class loginScreen {
+public class loginScreen<Private> {
     /* hier worden de gui onderdelen gedeclareerd */
     private JPanel panel_Login;
     private JTextField textField_username;
-    private JTextField textField_password;
+    private JPasswordField textField_password;
     private JLabel label_Message;
     private JLabel label_username;
     private JLabel label_password;
@@ -34,36 +35,51 @@ public class loginScreen {
             public void actionPerformed(ActionEvent e) {
                 /* de code hierin is wat er gebeurt als de knop "button_submit" word ingedrukt
                  er word gekeken of het wachtwoord klopt. zo ja, doorsturen naar volgende scherm. zo nee message laten zien met "Try again!' */
+
                 String ingevuldeUsername = textField_username.getText();
+                String ingevuldPassword = String.valueOf(textField_password.getPassword());
+
+                System.out.println(ingevuldPassword);
                 String query = "SELECT password FROM user WHERE username = '" + ingevuldeUsername + "';";
                 String wachtwoord = null;
+                ResultSet rs = null;
 
-
+                // de query uitvoeren
                 try {
-                    wachtwoord = dataBase.getPassword(query);
-                }
-                catch (SQLException ex) {
+                    rs = dataBase.executeQuery(query);
+
+                    // het rs omzetten in een String
+                    assert rs != null;
+                    wachtwoord = rsToPassword(rs);
+                } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
-                /* nu gaan we kijken of het wachtwoord klopt */
-                String ingevuldPassword = textField_password.getText();
 
-                System.out.println("test2");
+                // checken of het wachwoord klopt
                 checkPassword(wachtwoord, ingevuldPassword, login);
             }
         });
     }
 
-     private void checkPassword(String wachtwoord, String ingevuldWachtwoord, JFrame login) {
-         System.out.println(wachtwoord + "\t\t" + ingevuldWachtwoord);
-        if (ingevuldWachtwoord.equals(wachtwoord)) {
-            /* als de wachtwoord en gebruikersnaam combinatie klopt, stuurt deze code je door naar het volgende scherm: */
+    private String rsToPassword(ResultSet rs) throws SQLException {
 
+        assert rs != null;
+        rs.next();
+
+        return rs.getString("password");
+    }
+
+    private void checkPassword(String wachtwoord, String ingevuldWachtwoord, JFrame login) {
+        /* als de wachtwoord en gebruikersnaam combinatie klopt, stuurt deze code je door naar het volgende scherm: */
+
+
+        if (ingevuldWachtwoord.equals(wachtwoord)) {
             JFrame optie = new JFrame("optie scherm");                       // dit zorgt ervoor dat de programatuur weet dat dit een scherm, of "JFrame" is.
             try {
                 optie.setContentPane(new optionScreen(optie).panel_optieScherm);      // hier zeg je waaruit die JFrame gaat bestaan, dus je kiest welk panel. let op dat je de panel public maakt in je code.
-            } catch (SQLException ex) {ex.printStackTrace();}
-
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             optie.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);                 // hier word gezegd wat er gebeurt als er op sluiten gedrukt word, in dit geval word het programma afgesloten
             optie.pack();                                                         // hier worden alle gui elementen uit het bestant "optie" op dezelfde JFrame gezet
             optie.setVisible(true);                                               // spreekt wel voor zich, hier word de JFrame "optie" zichtbaar gemaakt
@@ -72,7 +88,7 @@ public class loginScreen {
         } else {
             /* als het niet klopt, vraagt dit je om het opnieuw te proberen */
 
-            JOptionPane.showMessageDialog(null, "Wrong combination, please try again!");
+            JOptionPane.showMessageDialog(panel_Login, "Wrong combination, please try again!");
         }
     }
 }

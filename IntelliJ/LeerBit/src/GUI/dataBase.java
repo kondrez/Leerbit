@@ -1,5 +1,9 @@
 package GUI;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.sql.*;
 
 class dataBase {
@@ -29,7 +33,7 @@ class dataBase {
         // connection to database
         Connection conn = makeConnection();
 
-        Statement st = null;
+        Statement st;
         ResultSet rs = null;
 
         // eerst een resultset maken
@@ -40,44 +44,22 @@ class dataBase {
             // daarna een resultset, dit is een lijst met alle resultaten van de query
             assert st != null;
             rs = st.executeQuery(query);
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        assert st != null;
-        st.close();
-        conn.close();
 
         return rs;
     }
 
-    static String getPassword(String query) throws SQLException {
-        /* deze methode voert een query uit en slaat het resultaat op in een resultset */
+    static void executeUpdate(String query) throws SQLException, FileNotFoundException {
+        // connectie maken met de database
 
-        // connection to database
         Connection conn = makeConnection();
 
-        Statement st = null;
-        ResultSet rs = null;
+        Statement st = conn.createStatement();
 
-        // eerst een resultset maken
-        try {
-            assert conn != null;
-            st = conn.createStatement();
-
-            // daarna een resultset, dit is een lijst met alle resultaten van de query
-            assert st != null;
-            rs = st.executeQuery(query);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        assert rs != null;
-        rs.next();
-        String resultaat = rs.getString("password");
-
-        rs.close();
-        st.close();
-        conn.close();
-        return resultaat;
+        // de oude data uit te database verweideren
+        st.executeUpdate(query);
     }
 }
