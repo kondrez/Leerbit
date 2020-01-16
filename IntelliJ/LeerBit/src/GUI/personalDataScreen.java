@@ -57,7 +57,8 @@ public class personalDataScreen {
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
-                String query = "insert into leerling values ('" +
+                String query = "insert into leerling values " +
+                        "('" +
                         idNummer + "','" + voornaam + "','" + achternaam + "','" + leeftijd + "');";
                 try {
                     dataBase.executeUpdate(query);
