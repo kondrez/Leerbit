@@ -3,15 +3,17 @@ package GUI;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class exercisesScreen {
-    private JTable table_opdrachten;
     public JPanel panel_opdrachten;
     private JLabel label_messages;
-    private JScrollPane scrollPane_omTabel;
     private JButton button_submit;
     private JButton button_home;
+    private JTextField textField_courseName;
+    private JTextField textField_questionAmount;
 
     public exercisesScreen(JFrame exercises) {
         button_home.addActionListener(new ActionListener() {
@@ -29,5 +31,30 @@ public class exercisesScreen {
                 exercises.dispose();
             }
         });
+
+        button_submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String courseName = textField_courseName.getText();
+                String questionAmount = textField_questionAmount.getText();
+
+                // get the maximum leerling_nummer, than add 1 to get the new;
+                ResultSet rs = null;
+                String query = "insert into vak values " +
+                        "('" +
+                        courseName + "','" + questionAmount  + "');";
+                try {
+                    dataBase.executeUpdate(query);
+                } catch (SQLException | FileNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+                System.out.println("course add sucessfull");
+            }
+        });
+
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 }
