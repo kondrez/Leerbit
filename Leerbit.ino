@@ -104,6 +104,7 @@ int buttonState_D = 0;         // variable for reading the pushbutton D status
 
 int buttonState_Left = 0;         // variable for reading the left touchbutton status
 int buttonState_Right = 0;        // variable for reading the right touchbutton status
+
 int menu_state;
 int vak_state;
 int resultaten_state;
@@ -137,41 +138,7 @@ void setup() {
   u8g2.begin(7, U8X8_PIN_NONE, U8X8_PIN_NONE, 31, 3, 29); // Start oled display
 
 
-  Serial.print("Initializing SD card...");
-  if (!SD.begin(53)) {
-    Serial.println("initialization failed!");
-    return;
-  }
-  Serial.println("initialization done.");
-
-  // open the file. note that only one file can be open at a time,
-  // so you have to close this one before opening another.
-  myFile = SD.open("user.txt");
-
-  // if the file opened okay, write to it:
-  if (myFile) {
-    Serial.println("File opened!!");
-    Serial.println("user.txt:");
-    while (myFile.available()) {
-      Serial.write(myFile.read());
-    }
-
-
-  } else {
-    // if the file didn't open, print an error:
-    Serial.println("error opening!!");
-  }
-
-
-  // close the file:
-  myFile.close();
-
-
-
-
-
-
-
+  Serial.println("Initializing Leerbit...");
 
 
 
@@ -223,6 +190,8 @@ void setup() {
 
   delay(1500);
 
+  Serial.println("initialization done.");
+
 }
 
 void loop() {
@@ -238,15 +207,42 @@ void loop() {
   if (menu_state == 1) {
 
     vak_state = vakken_screen();
-    if (vak_state == 2) {
+    if (vak_state == 1) {
       for (int i = 1; i <= 15; i++) {
         vraag_Screen(i, "Wat is het doel?", "niks", "wat", "hoe", "yup", 'b');
-
       }
-      delay(1000);
-      clear_leds();
     }
+
+    else if (vak_state == 2) {
+      for (int i = 1; i <= 15; i++) {
+        vraag_Screen(i, "Wat is het woord?", "niks", "wat", "hoe", "yup", 'b');
+      }
+    }
+
+    else if (vak_state == 3) {
+      for (int i = 1; i <= 15; i++) {
+        vraag_Screen(i, "Wat is het getal?", "een", "twee", "vijf", "zeven", 'b');
+      }
+    }
+
+    else if (vak_state == 4) {
+      for (int i = 1; i <= 15; i++) {
+        vraag_Screen(i, "Wat is het?", "niks", "wat", "hoe", "yup", 'b');
+      }
+    }
+
+    else if (vak_state == 5) {
+      for (int i = 1; i <= 15; i++) {
+        vraag_Screen(i, "Wat is het antwoord?", "niks", "wat", "hoe", "yup", 'b');
+      }
+    }
+
+
+
+    delay(1000);
+    clear_leds();
   }
+
 
   else if (menu_state == 2) {
 
@@ -300,21 +296,8 @@ void loop() {
       }
     }
   }
-  // vraag_Screen();
 
 
-
-
-
-
-
-  buttonState_A = digitalRead(buttonPinA);  //Store the state of button A in the variable
-  buttonState_B = digitalRead(buttonPinB);  //Store the state of button B in the variable
-  buttonState_C = digitalRead(buttonPinC);  //Store the state of button C in the variable
-  buttonState_D = digitalRead(buttonPinD);  //Store the state of button D in the variable
-
-  buttonState_Left = digitalRead(buttonPinLeft); //Store the state of left touch button in the variable
-  buttonState_Right = digitalRead(buttonPinRight); //Store the state of right touch button in the variable
 
 
 }
@@ -408,7 +391,7 @@ void vraag_Screen(int vraagNr, char vraag[], char a1[], char a2[], char a3[], ch
   u8g2.print(vraagNr);
   u8g2.print(".");
 
-  u8g2.setCursor(16, 8);
+  u8g2.setCursor(0, 16);
   u8g2.print(vraag); // write something to the internal memory
 
   u8g2.setCursor(0, 45);
