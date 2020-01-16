@@ -36,39 +36,31 @@
           <text value="take me back!"/>
         </properties>
       </component>
-      <component id="4ccc0" class="javax.swing.JLabel">
+      <component id="4ccc0" class="javax.swing.JLabel" binding="label_voornaam">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="tsssssssss\"/>
+          <text value="voornaam"/>
         </properties>
       </component>
-      <component id="dc1fe" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Label"/>
-        </properties>
-      </component>
-      <component id="b4a99" class="javax.swing.JLabel">
+      <component id="b4a99" class="javax.swing.JLabel" binding="label_leeftijd">
         <constraints>
           <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Label"/>
+          <text value="leeftijd"/>
         </properties>
       </component>
-      <component id="2abbd" class="javax.swing.JLabel">
+      <component id="2abbd" class="javax.swing.JLabel" binding="label_achternaam">
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Label"/>
+          <text value="achternaam"/>
         </properties>
       </component>
-      <component id="c291c" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+      <component id="c291c" class="javax.swing.JTextField" binding="textField_voornaam">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -76,25 +68,19 @@
         </constraints>
         <properties/>
       </component>
-      <component id="982a" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+      <component id="982a" class="javax.swing.JTextField" binding="textField_achternaam">
         <constraints>
           <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <text value=""/>
+        </properties>
       </component>
-      <component id="ac775" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+      <component id="ac775" class="javax.swing.JTextField" binding="textField_leeftijd">
         <constraints>
           <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties/>
-      </component>
-      <component id="e9532" class="javax.swing.JTextField" binding="textField4" default-binding="true">
-        <constraints>
-          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>

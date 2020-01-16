@@ -7,6 +7,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -16,12 +17,14 @@ public class personalDataScreen {
     private JLabel label_message;
     private JButton button_submit;
     private JButton button_home;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JTextField textField3;
-    private JTextField textField4;
+    private JTextField textField_voornaam;
+    private JTextField textField_achternaam;
+    private JTextField textField_leeftijd;
+    private JLabel label_voornaam;
+    private JLabel label_achternaam;
+    private JLabel label_leeftijd;
 
-    personalDataScreen(JFrame PData) throws SQLException {
+    personalDataScreen(JFrame PData) {
         button_home.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -37,24 +40,32 @@ public class personalDataScreen {
                 PData.dispose();
             }
         });
+        button_submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String voornaam = textField_voornaam.getText();
+                String achternaam = textField_achternaam.getText();
+                String leeftijd = textField_leeftijd.getText();
+                int idNummer = 0;
 
-
-    }
-
-
-
-    public void setData(personalDataScreen[][] data) {
-        String column[]={"ID","NAME","SALARY"};
-    }
-
-    public void getData(personalDataScreen data) {
-
-
-    }
-
-    public boolean isModified(personalDataScreen data) {
-
-
-        return false;
+                // get the maximum leerling_nummer, than add 1 to get the new;
+                ResultSet rs = null;
+                try {
+                    rs = dataBase.executeQuery("select max(leerling_nummer) from leerling;");
+                    rs.next();
+                    idNummer = (rs.getInt(1)) + 1;
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+                String query = "insert into leerling values ('" +
+                        idNummer + "','" + voornaam + "','" + achternaam + "','" + leeftijd + "');";
+                try {
+                    dataBase.executeUpdate(query);
+                } catch (SQLException | FileNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+                System.out.println("student add sucessfull");
+            }
+        });
     }
 }

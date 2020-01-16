@@ -30,13 +30,14 @@ class dataBase {
     static ResultSet executeQuery(String query) throws SQLException {
         /* deze methode voert een query uit en slaat het resultaat op in een resultset */
 
+        ResultSet rs = null;
+
         // connection to database
         Connection conn = makeConnection();
 
+        // eerst een statement maken
         Statement st;
-        ResultSet rs = null;
 
-        // eerst een resultset maken
         try {
             assert conn != null;
             st = conn.createStatement();
