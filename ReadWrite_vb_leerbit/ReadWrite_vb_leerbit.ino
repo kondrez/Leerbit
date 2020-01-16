@@ -22,10 +22,10 @@
 #include <SD.h>
 
 
-  const size_t BUFFER_SZ = 20;
-  
-  char buffer[BUFFER_SZ];
-  char woord[BUFFER_SZ];
+const size_t BUFFER_SZ = 40;
+
+char woord[BUFFER_SZ];
+char username[BUFFER_SZ];
 
 void setup() {
   // Open serial communications and wait for port to open:
@@ -43,57 +43,53 @@ void setup() {
   }
   Serial.println("initialization done.");
 
-  
+
 }
 
 void loop() {
   // nothing happens after setup
+
+  wordFromFile(2, username);
   
+  Serial.println(username);
 
-  wordFromFile(2, buffer);
-
-  for (int i = 0; i <= BUFFER_SZ; i++) {
-    woord[i] = buffer[i];
-  }
-
-  Serial.println(woord);
-
-   delay(1000);
+  delay(1000);
 }
 
 void wordFromFile(int welkWoord, char *buffer) {
-int woordTeller = 0;
+  int woordTeller = 0;
 
-File myFile;
-myFile = SD.open("test.txt");
+  File myFile;
+  myFile = SD.open("test.txt");
 
   if (myFile) {
-    
+
     size_t pos = 0;    // current write position in buffer
     int c;
-    
+
     // While we can read a character:
     while ((c = myFile.read()) != -1) {
 
-      // If we get a delimiter, then we have a complete element.
+      // als we een , of een enter inlezen hebben we een heel woord
       if (c == ',' || c == '\n') {
         buffer[pos] = '\0';         // terminate the string
-      //Serial.println(buffer);     // write the word to serial monitor
+        
+        // als het het woord is wat we willen, return
+        if (woordTeller == welkWoord) {
+          return;
+        }
 
-      // als het het woord is wat we willen, return
-      if (woordTeller == welkWoord) {
-        return;
-      }
-      woordTeller++;
+        // anders verder naar het volgende woord
+        woordTeller++;
         pos = 0;                    // ready for next element
       }
 
-      // Otherwise, store the character in the buffer.
+      // als het geen , of enter is door na het volgende char
       else if (pos < BUFFER_SZ - 1) {
         buffer[pos++] = c;
       }
     }
-    
+
     // close the file:
     myFile.close();
   } else {
