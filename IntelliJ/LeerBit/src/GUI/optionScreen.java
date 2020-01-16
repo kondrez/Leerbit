@@ -22,6 +22,7 @@ public class optionScreen {
     private JButton button3;
     private JTable table_Leerlingen = null;
     private JTable table_opdrachten = null;
+    public static String bestandLocatie = "C:\\test\\";
 
     optionScreen(JFrame optie) throws SQLException {
         /* dit is een methode met daarin alle code voor de knoppen. */
@@ -93,11 +94,7 @@ public class optionScreen {
             public void actionPerformed(ActionEvent e) {
 
                 JFrame PData = new JFrame("PersoonsDataScherm");
-                try {
-                    PData.setContentPane(new personalDataScreen(PData).panel_PData);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
+                PData.setContentPane(new personalDataScreen(PData).panel_PData);
                 PData.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 PData.pack();
                 PData.setVisible(true);
@@ -138,7 +135,7 @@ public class optionScreen {
 
         // show the table in a message dialog
         JOptionPane.showMessageDialog(panel_optieScherm, table_opdrachten, message,
-                JOptionPane.INFORMATION_MESSAGE, new ImageIcon("C:\\test\\leerbit.png"));
+                JOptionPane.INFORMATION_MESSAGE, new ImageIcon(bestandLocatie + "leerbit2.png"));
 
     }
 
@@ -148,12 +145,14 @@ public class optionScreen {
         // names of columns
         Vector<String> columnNames = new Vector<>();
         int columnCount = metaData.getColumnCount();
+
         for (int column = 1; column <= columnCount; column++) {
             columnNames.add(metaData.getColumnName(column));
         }
 
         // data of the table
         Vector<Vector<Object>> data = new Vector<>();
+
         while (rs.next()) {
             Vector<Object> vector = new Vector<Object>();
             for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
@@ -168,29 +167,16 @@ public class optionScreen {
     private static void writeSD() throws SQLException, IOException {
         /* deze methode leest een database uit, en zet dit daarna in een .txt bestand */
 
-        String path = "C:\\test\\";
-
         // defineren van de list variabelen
         java.util.List<String> data_leerling = new ArrayList<String>();
         java.util.List<String> data_vragen = new ArrayList<String>();
         java.util.List<String> data_score = new ArrayList<String>();
         java.util.List<String> data_vak = new ArrayList<String>();
 
-        // connectie maken met de database
-        String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
-        String username = "admin";
-        String password = "admin";
-        Connection conn;
-
-        conn = DriverManager.getConnection(url, username, password);
-
         /* De tabel leerling uitlezen, en dan opzetten in het bestandje leerling.csv */
 
 
-        assert conn != null;
-        Statement st = conn.createStatement();
-        ResultSet rs;
-        rs = st.executeQuery("Select voor_naam from leerling");
+        ResultSet rs = dataBase.executeQuery("Select voor_naam from leerling");
 
         while (rs.next()) {
             String voor_naam = rs.getString("voor_naam");
@@ -198,10 +184,10 @@ public class optionScreen {
             data_leerling.add(voor_naam);
         }
 
-        deleteFile(path + "leerling.csv");
+        deleteFile(bestandLocatie + "leerling.csv");
 
         assert false;
-        writeToFile(listToArray(data_leerling), path + "leerling.csv");
+        writeToFile(listToArray(data_leerling), bestandLocatie + "leerling.csv");
 
 
         /* De tabel vragen uitlezen, en dan omzetten in het .txt bestand vragen.csv */
@@ -220,14 +206,15 @@ public class optionScreen {
             data_vragen.add(id + "," + vak_naam + "," + opdracht + "," + antwoord1 + "," + antwoord2 + "," + antwoord3 + "," + antwoord4 + "," + juisteAntwoord);
         }
         // eerst het oude bestand verweideren
-        deleteFile(path + "vragen.csv");
+        deleteFile(bestandLocatie + "vragen.csv");
 
         // en dan schijven naar het bestand
         assert false;
-        writeToFile(listToArray(data_vragen), path + "vragen.csv");
+        writeToFile(listToArray(data_vragen), bestandLocatie + "vragen.csv");
+
 
         // De tabel score uitlezen
-        rs = st.executeQuery("Select * from score");
+        rs = dataBase.executeQuery("Select * from score");
 
         while (rs.next()) {
             String id = rs.getString("leerling_nummer");
@@ -237,13 +224,13 @@ public class optionScreen {
             data_score.add(id + "," + vak_naam + "," + aantal_goed);
         }
 
-        deleteFile(path + "score.csv");
+        deleteFile(bestandLocatie + "score.csv");
 
         assert false;
-        writeToFile(listToArray(data_score), path + "score.csv");
+        writeToFile(listToArray(data_score), bestandLocatie + "score.csv");
 
         // De tabel vak uitlezen
-        rs = st.executeQuery("Select * from vak");
+        rs = dataBase.executeQuery("Select * from vak");
 
         while (rs.next()) {
             String vak_naam = rs.getString("vak_naam");
@@ -252,15 +239,36 @@ public class optionScreen {
             data_vak.add(vak_naam + "," + aantal_vragen);
         }
 
-        deleteFile(path + "vak.csv");
+        deleteFile(bestandLocatie + "vak.csv");
 
         assert false;
-        writeToFile(listToArray(data_vak), path + "vak.csv");
+        writeToFile(listToArray(data_vak), bestandLocatie + "vak.csv");
 
-        // netjes alles sluiten
-        st.close();
-        rs.close();
-        conn.close();
+        //vragen toevoegen
+        rs = dataBase.executeQuery("Select * from vragen");
+
+        while (rs.next()) {
+            String vraag_nummer = rs.getString("vraag_nummer");
+            String vak_naam = rs.getString("vak_naam");
+            String opdracht = rs.getString("opdracht");
+            String antwoord1= rs.getString("antwoord1");
+            String antwoord2= rs.getString("antwoord2");
+            String antwoord3= rs.getString("antwoord3");
+            String antwoord4= rs.getString("antwoord4");
+            String juiste_antwoord= rs.getString("juiste_antwoord");
+
+
+
+            data_vragen.add(vraag_nummer + "," + vak_naam +","+opdracht+","+antwoord1+","+ antwoord2+","+antwoord3
+                    +","+antwoord4+","+ juiste_antwoord);
+        }
+
+        deleteFile(bestandLocatie + "vragen.csv");
+
+        assert false;
+        writeToFile(listToArray(data_vragen), bestandLocatie + "vragen.csv");
+
+
         System.out.println("export successful");
     }
 
@@ -274,8 +282,6 @@ public class optionScreen {
         } else {
             System.out.println("Delete failed");
         }
-
-
     }
 
     private static void writeToFile(String[] array, String path) throws IOException {
@@ -302,19 +308,19 @@ public class optionScreen {
     private static void readCSVFile() throws IOException, SQLException {
         /* this method reads a .csv file */
         String deleteQuery = "DELETE FROM score WHERE leerling_nummer <= 1000000";
-        String updateQuery = null;
+        String updateQuery;
 
         // de oude tuples verweideren
         dataBase.executeUpdate(deleteQuery);
 
         // een buffer reader aanmaken, die altijd genest moeten worden met een file reader, die een bestand pad nodig heeft
-        BufferedReader input = null;
-        input = new BufferedReader(new FileReader(new File("C:\\Users\\mjnde\\OneDrive\\Documenten\\leerbit\\score.csv")));
+        BufferedReader input;
+        input = new BufferedReader(new FileReader(new File(bestandLocatie + "score.csv")));
 
         // nieuwe data in de database zetten
         try {
-            String regel = null;
-            String[] elementen = null;
+            String regel;
+            String[] elementen;
 
             // regel voor regel het bestand afgaan, en elke regel in een query omzetten en uitvoeren
             while ((regel = input.readLine()) != null) {

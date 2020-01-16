@@ -25,8 +25,6 @@ public class loginScreen<Private> {
         login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         login.pack();
         login.setVisible(true);
-
-
     }
 
     private loginScreen(JFrame login) throws SQLException {
@@ -38,8 +36,6 @@ public class loginScreen<Private> {
 
                 String ingevuldeUsername = textField_username.getText();
                 String ingevuldPassword = String.valueOf(textField_password.getPassword());
-
-                System.out.println(ingevuldPassword);
                 String query = "SELECT password FROM user WHERE username = '" + ingevuldeUsername + "';";
                 String wachtwoord = null;
                 ResultSet rs = null;
