@@ -22,7 +22,24 @@
 #include <SPI.h>
 #include <Wire.h>
 
-File myFile;
+
+
+
+
+const size_t BUFFER_SZ = 40;
+
+char woord[BUFFER_SZ];
+char username[BUFFER_SZ];
+
+char lines[15][200];
+
+char vraag[60];
+char antwoord1[60];
+char antwoord2[60];
+char antwoord3[60];
+char antwoord4[60];
+char juisteAntwoord[60];
+
 
 
 
@@ -108,6 +125,9 @@ int buttonState_Right = 0;        // variable for reading the right touchbutton 
 int menu_state;
 int vak_state;
 int resultaten_state;
+int profiel_state;
+
+int user_Id;
 
 
 // Startup screen
@@ -135,6 +155,29 @@ static const unsigned char gear_logo[] U8X8_PROGMEM = {
 
 void setup() {
   Serial.begin(9600); // Start serial communication
+
+
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
+
+
+  Serial.print("Initializing SD card...");
+
+  if (!SD.begin(53)) {
+    Serial.println("initialization failed!");
+    return;
+  }
+  Serial.println("initialization done.");
+
+  linesFromFile(); // read from sd card
+
+
+
+
+
+
+
   u8g2.begin(7, U8X8_PIN_NONE, U8X8_PIN_NONE, 31, 3, 29); // Start oled display
 
 
@@ -204,12 +247,25 @@ void loop() {
 
 
 
+
   if (menu_state == 1) {
 
     vak_state = vakken_screen();
     if (vak_state == 1) {
       for (int i = 1; i <= 15; i++) {
-        vraag_Screen(i, "Wat is het doel?", "niks", "wat", "hoe", "yup", 'b');
+        for (int m = 0; m < 60; m++) {
+          vraag[m] = (char)0;
+          antwoord1[m] = (char)0;
+          antwoord2[m] = (char)0;
+          antwoord3[m] = (char)0;
+          antwoord4[m] = (char)0;
+          juisteAntwoord[m] = (char)0;
+        }
+        parseLine(i - 1);
+        Serial.println(juisteAntwoord);
+        vraag_Screen(i, vraag, antwoord1, antwoord2, antwoord3, antwoord4, juisteAntwoord[0]);
+
+        // vraag_Screen(i, "Wat is het doel?", "niks", "wat", "hoe", "yup", 'b');
       }
     }
 
@@ -246,9 +302,28 @@ void loop() {
 
   else if (menu_state == 2) {
 
-    profiel_screen();
-  }
+    profiel_state = profiel_screen();
 
+    if (profiel_state == 1) {
+      user_Id = 1;
+    }
+
+    else if (profiel_state == 2) {
+      user_Id = 2;
+    }
+
+    else if (profiel_state == 3) {
+      user_Id = 3;
+    }
+
+    else if (profiel_state == 4) {
+      user_Id = 4;
+    }
+
+
+
+
+  }
 
 
   else if (menu_state == 3) {
@@ -302,6 +377,92 @@ void loop() {
 
 }
 
+
+
+
+
+void parseLine(int vrgNr) {
+  int i = 0;
+  int mode = 1;
+  int cnt = 0;
+
+  while (lines[vrgNr][i] != '\0') {
+    //    Serial.print("c=");
+    //    Serial.println(lines[vrgNr][i]);
+    if (lines[vrgNr][i] != ',') {
+      switch (mode) {
+        case 1: // vraag
+          vraag[cnt++] = lines[vrgNr][i];
+          break;
+        case 2: // antw 1
+          antwoord1[cnt++] = lines[vrgNr][i];
+          break;
+        case 3: // antw 2
+          antwoord2[cnt++] = lines[vrgNr][i];
+          break;
+        case 4: // antw 3
+          antwoord3[cnt++] = lines[vrgNr][i];
+          break;
+        case 5: // antw 4
+          antwoord4[cnt++] = lines[vrgNr][i];
+          break;
+        case 6: // antw 4
+          juisteAntwoord[cnt++] = lines[vrgNr][i];
+          break;
+      }
+    } else {
+      mode++;
+      cnt = 0;
+    }
+    i++;
+    //    Serial.print("i=");
+    //    Serial.println(i);
+  }
+  //  Serial.println(vraag);
+  //  Serial.println(antwoord1);
+  //  Serial.println(antwoord2);
+  //  Serial.println(antwoord3);
+  //  Serial.println(antwoord4);
+  //  Serial.println(juisteAntwoord);
+
+}
+
+void linesFromFile() {
+  int woordTeller = 0;
+  int linenr = 0;
+
+  File myFile;
+  myFile = SD.open("test.txt");
+
+  if (myFile) {
+    int pos = 0;    // current write position in buffer
+    int c;
+
+    // While we can read a character:
+    while ((c = myFile.read()) != -1) {
+      if (c != '\n') {
+        // zet in de array
+        lines[linenr][pos] = c;
+        //        Serial.print("linenr=");
+        //        Serial.print(linenr);
+        //        Serial.print(", pos=");
+        //        Serial.print(pos);
+        //        Serial.print(" : ");
+        //        Serial.println(lines[linenr][pos]);
+        pos++;
+      } else {
+        lines[linenr++][pos] = '\0';      // terminate the string
+        pos = 0;
+      }
+    }
+    // close the file:
+    myFile.close();
+  } else {
+    // if the file didn't open, print an error:
+    Serial.println("error opening test.txt");
+  }
+
+}
 
 
 
