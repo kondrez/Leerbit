@@ -50,8 +50,10 @@ public class optionScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 /* deze code word aangeroepen als er op de knop "button_scores" gedrukt word */
-                String query = "Select l.leerling_nummer, l.voor_naam, l.achter_naam, s.vak_naam, s.aantal_goed" +
+                String query = "Select l.leerling_nummer, l.voor_naam, l.achter_naam, s.vak_naam," +
+                        " s.aantal_goed, v.hoeveelheid_vragen as max_goed" +
                         " from score s join leerling l on s.leerling_nummer = l.leerling_nummer" +
+                        " join vak v on s.vak_naam = v.vak_naam" +
                         " order by l.leerling_nummer;";
                 String message = "Your Students:";
 
