@@ -19,9 +19,6 @@ public class optionScreen {
     private JButton button_import;
     private JButton button_addStudent;
     private JButton button_addCourse;
-    private JButton button3;
-    private JTable table_Leerlingen = null;
-    private JTable table_opdrachten = null;
     public static String bestandLocatie = "C:\\test\\";
 
     optionScreen(JFrame optie) throws SQLException {
@@ -42,7 +39,7 @@ public class optionScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 /* deze code word aangeroepen als er op de knop "opdrachten" gedrukt word */
-                String query = "Select * from vragen";
+                String query = "Select * from vraag";
                 String message = "Your subjects: ";
                 displayTable(query, message);
 
@@ -53,13 +50,14 @@ public class optionScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 /* deze code word aangeroepen als er op de knop "button_scores" gedrukt word */
+                String query = "Select l.leerling_nummer, l.voor_naam, l.achter_naam, s.vak_naam, s.aantal_goed" +
+                        " from score s join leerling l on s.leerling_nummer = l.leerling_nummer" +
+                        " order by l.leerling_nummer;";
+                String message = "Your Students:";
 
-                JFrame scores = new JFrame("scores scherm");
-                scores.setContentPane(new scoresScreen(scores).panel_scoresScreen);
-                scores.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                scores.pack();
-                scores.setVisible(true);
-                optie.dispose();
+                System.out.println(query);
+
+                displayTable(query, message);
             }
         });
 
@@ -124,19 +122,19 @@ public class optionScreen {
             rs = dataBase.executeQuery(query);
 
             // construct a table model
-            assert rs != null;
-            table_opdrachten = new JTable(buildTableModel(rs));
+
+            JTable table = new JTable(buildTableModel(rs));
+            //JOptionPane.showMessageDialog(null, new JScrollPane(table));
+
+            // display the table in a message dialog
+            JOptionPane.showMessageDialog(panel_optieScherm, new JScrollPane(table), message,
+                    JOptionPane.INFORMATION_MESSAGE, new ImageIcon(bestandLocatie + "leerbit2.png"));
 
             // closing the resultset
             rs.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
-        // show the table in a message dialog
-        JOptionPane.showMessageDialog(panel_optieScherm, table_opdrachten, message,
-                JOptionPane.INFORMATION_MESSAGE, new ImageIcon(bestandLocatie + "leerbit2.png"));
-
     }
 
     private static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
@@ -206,11 +204,11 @@ public class optionScreen {
             data_vragen.add(id + "," + vak_naam + "," + opdracht + "," + antwoord1 + "," + antwoord2 + "," + antwoord3 + "," + antwoord4 + "," + juisteAntwoord);
         }
         // eerst het oude bestand verweideren
-        deleteFile(bestandLocatie + "vragen.csv");
+        deleteFile(bestandLocatie + "vraag.csv");
 
         // en dan schijven naar het bestand
         assert false;
-        writeToFile(listToArray(data_vragen), bestandLocatie + "vragen.csv");
+        writeToFile(listToArray(data_vragen), bestandLocatie + "vraag.csv");
 
 
         // De tabel score uitlezen
@@ -251,16 +249,15 @@ public class optionScreen {
             String vraag_nummer = rs.getString("vraag_nummer");
             String vak_naam = rs.getString("vak_naam");
             String opdracht = rs.getString("opdracht");
-            String antwoord1= rs.getString("antwoord1");
-            String antwoord2= rs.getString("antwoord2");
-            String antwoord3= rs.getString("antwoord3");
-            String antwoord4= rs.getString("antwoord4");
-            String juiste_antwoord= rs.getString("juiste_antwoord");
+            String antwoord1 = rs.getString("antwoord1");
+            String antwoord2 = rs.getString("antwoord2");
+            String antwoord3 = rs.getString("antwoord3");
+            String antwoord4 = rs.getString("antwoord4");
+            String juiste_antwoord = rs.getString("juiste_antwoord");
 
 
-
-            data_vragen.add(vraag_nummer + "," + vak_naam +","+opdracht+","+antwoord1+","+ antwoord2+","+antwoord3
-                    +","+antwoord4+","+ juiste_antwoord);
+            data_vragen.add(vraag_nummer + "," + vak_naam + "," + opdracht + "," + antwoord1 + "," + antwoord2 + "," + antwoord3
+                    + "," + antwoord4 + "," + juiste_antwoord);
         }
 
         deleteFile(bestandLocatie + "vragen.csv");
