@@ -172,9 +172,10 @@ public class optionScreen {
         java.util.List<String> data_leerling = new ArrayList<String>();
         java.util.List<String> data_vragen = new ArrayList<String>();
         java.util.List<String> data_score = new ArrayList<String>();
+        ResultSet rs;
 
         /* De tabel leerling uitlezen, en dan opzetten in het bestand leerling.csv */
-        ResultSet rs = dataBase.executeQuery("Select voor_naam from leerling");
+        rs = dataBase.executeQuery("Select voor_naam from leerling");
 
         while (rs.next()) {
             String voor_naam = rs.getString("voor_naam");
