@@ -42,7 +42,12 @@ public class optionScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 /* deze code word aangeroepen als er op de knop "opdrachten" gedrukt word */
-                String query = "Select * from vraag";
+                String query = "Select v.vak_naam as vak, r.vraag_nummer as vraag, r.opdracht, " +
+                        "r.antwoord1 as A, r.antwoord2 as B, r.antwoord3 as C, r.antwoord4 as D, " +
+                        "r.juiste_antwoord as goed " +
+                        "from vraag r join vak v on r.vak_nummer = v.vak_nummer " +
+                        "order by v.vak_nummer asc, r.vraag_nummer asc;";
+                System.out.println(query);
                 String message = "Your subjects: ";
                 displayTable(query, message);
 
@@ -174,7 +179,6 @@ public class optionScreen {
         ResultSet rs;
 
         /* De tabel leerling uitlezen, en dan opzetten in het bestandje leerling.csv */
-
         rs = dataBase.executeQuery("Select voor_naam from leerling");
 
         while (rs.next()) {
@@ -212,9 +216,8 @@ public class optionScreen {
         int vakTeller = 1;
 
         // groote van de resultset vinden
-        int size =0;
-        if (rs != null)
-        {
+        int size = 0;
+        if (rs != null) {
             rs.last();    // moves cursor to the last row
             size = rs.getRow(); // get row id
         }
@@ -228,8 +231,7 @@ public class optionScreen {
                 data_vragen.add(rsVak.getString(1));
                 rsVak.close();
                 vakTeller++;
-            }
-            else {
+            } else {
                 // als het geen vaknaam regel is, data uitlezen en toevoegen aan de lijst
                 String opdracht = rs.getString("opdracht");
                 String antwoord1 = rs.getString("antwoord1");

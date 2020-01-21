@@ -48,18 +48,15 @@ public class personalDataScreen {
                 String leeftijd = textField_leeftijd.getText();
                 int idNummer = 0;
 
+                String query = "insert into leerling values ('" +
+                        idNummer + "','" + voornaam + "','" + achternaam + "','" + leeftijd + "');";
+
                 // get the maximum leerling_nummer, than add 1 to get the new;
                 ResultSet rs = null;
                 try {
                     rs = dataBase.executeQuery("select max(leerling_nummer) from leerling;");
                     rs.next();
                     idNummer = (rs.getInt(1)) + 1;
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-                String query = "insert into leerling values ('" +
-                        idNummer + "','" + voornaam + "','" + achternaam + "','" + leeftijd + "');";
-                try {
                     dataBase.executeUpdate(query);
                 } catch (SQLException | FileNotFoundException ex) {
                     ex.printStackTrace();

@@ -13,10 +13,12 @@ class dataBase {
     }
 
     private static Connection makeConnection() {
-        String url = "jdbc:mysql://localhost:3306/leerbit?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
+        String url = "jdbc:mysql://localhost:3306/leerbit" +
+                "?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&&serverTimezone=UTC";
         String username = "admin";
         String password = "admin";
 
+        // een connectie maken, met de url, username en password
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url, username, password);        // hier word daarwerkelijk de connectie gemaakt
@@ -24,11 +26,12 @@ class dataBase {
             ex.printStackTrace();
         }
 
+        // deze connectie dan returnen
         return conn;
     }
 
     static ResultSet executeQuery(String query) throws SQLException {
-        /* deze methode voert een query uit en slaat het resultaat op in een resultset */
+        /* deze methode voert een select query uit en slaat het resultaat op in een resultset */
 
         ResultSet rs = null;
 
