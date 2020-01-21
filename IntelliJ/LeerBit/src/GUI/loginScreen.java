@@ -35,10 +35,11 @@ public class loginScreen<Private> {
                  er word gekeken of het wachtwoord klopt. zo ja, doorsturen naar volgende scherm. zo nee message laten zien met "Try again!' */
 
                 String ingevuldeUsername = textField_username.getText();
-                String ingevuldPassword = String.valueOf(textField_password.getPassword());
+                int wachtwoordHash = String.valueOf(textField_password.getPassword()).hashCode();
                 String query = "SELECT password FROM user WHERE username = '" + ingevuldeUsername + "';";
-                String wachtwoord = null;
-                ResultSet rs = null;
+                //int wachtwoordHash = ingevuldPassword.hashCode();;
+                int opgeslagenHash = 0;
+                ResultSet rs;
 
                 // de query uitvoeren
                 try {
@@ -46,30 +47,22 @@ public class loginScreen<Private> {
 
                     // het rs omzetten in een String
                     assert rs != null;
-                    wachtwoord = rsToPassword(rs);
+                    rs.next();
+                    opgeslagenHash = rs.getInt("password");
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
 
                 // checken of het wachwoord klopt
-                checkPassword(wachtwoord, ingevuldPassword, login);
+                checkPassword(opgeslagenHash, wachtwoordHash, login);
             }
         });
     }
 
-    private String rsToPassword(ResultSet rs) throws SQLException {
-
-        assert rs != null;
-        rs.next();
-
-        return rs.getString("password");
-    }
-
-    private void checkPassword(String wachtwoord, String ingevuldWachtwoord, JFrame login) {
+    private void checkPassword(int wachtwoord, int ingevuldWachtwoord, JFrame login) {
         /* als de wachtwoord en gebruikersnaam combinatie klopt, stuurt deze code je door naar het volgende scherm: */
 
-
-        if (ingevuldWachtwoord.equals(wachtwoord)) {
+        if (ingevuldWachtwoord == wachtwoord) {
             JFrame optie = new JFrame("optie scherm");                       // dit zorgt ervoor dat de programatuur weet dat dit een scherm, of "JFrame" is.
             try {
                 optie.setContentPane(new optionScreen(optie).panel_optieScherm);      // hier zeg je waaruit die JFrame gaat bestaan, dus je kiest welk panel. let op dat je de panel public maakt in je code.
