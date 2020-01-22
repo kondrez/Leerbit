@@ -49,7 +49,11 @@ public class assignmentScreen {
                         }
 
                         JFrame questions = new JFrame("vragen scherm");
-                        questions.setContentPane(new questionsScreen(questions, currentVakNr).JPanel_VragenToevoegen);
+                        try {
+                            questions.setContentPane(new questionsScreen(questions, currentVakNr).JPanel_VragenToevoegen);
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
                         questions.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                         questions.pack();
                         questions.setVisible(true);
