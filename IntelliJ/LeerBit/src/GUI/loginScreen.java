@@ -16,7 +16,7 @@ public class loginScreen<Private> {
     private JLabel label_password;
     private JButton button_submit;
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+    public static void main(String[] args) throws SQLException {
         /* this is where the program starts running */
         /* code hieronder bouwt een scherm op, en laat dit zien */
 
@@ -27,18 +27,19 @@ public class loginScreen<Private> {
         login.setVisible(true);
     }
 
-    private loginScreen(JFrame login) throws SQLException {
+    private loginScreen(JFrame login) {
         button_submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 /* de code hierin is wat er gebeurt als de knop "button_submit" word ingedrukt
-                 er word gekeken of het wachtwoord klopt. zo ja, doorsturen naar volgende scherm. zo nee message laten zien met "Try again!' */
+                 er word gekeken of het wachtwoord klopt. zo ja, doorsturen naar volgende scherm.
+                 zo nee message laten zien met "Try again!' */
 
                 String ingevuldeUsername = textField_username.getText();
-                String ingevuldPassword = String.valueOf(textField_password.getPassword());
+                int wachtwoordHash = String.valueOf(textField_password.getPassword()).hashCode();
                 String query = "SELECT password FROM user WHERE username = '" + ingevuldeUsername + "';";
-                String wachtwoord = null;
-                ResultSet rs = null;
+                int opgeslagenHash = 0;
+                ResultSet rs;
 
                 // de query uitvoeren
                 try {
@@ -46,44 +47,35 @@ public class loginScreen<Private> {
 
                     // het rs omzetten in een String
                     assert rs != null;
-                    wachtwoord = rsToPassword(rs);
+                    rs.next();
+                    opgeslagenHash = rs.getInt("password");
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
 
                 // checken of het wachwoord klopt
-                checkPassword(wachtwoord, ingevuldPassword, login);
+                checkPassword(opgeslagenHash, wachtwoordHash, login);
             }
         });
     }
 
-    private String rsToPassword(ResultSet rs) throws SQLException {
-
-        assert rs != null;
-        rs.next();
-
-        return rs.getString("password");
-    }
-
-    private void checkPassword(String wachtwoord, String ingevuldWachtwoord, JFrame login) {
+    private void checkPassword(int wachtwoord, int ingevuldWachtwoord, JFrame login) {
         /* als de wachtwoord en gebruikersnaam combinatie klopt, stuurt deze code je door naar het volgende scherm: */
 
-
-        if (ingevuldWachtwoord.equals(wachtwoord)) {
-            JFrame optie = new JFrame("optie scherm");                       // dit zorgt ervoor dat de programatuur weet dat dit een scherm, of "JFrame" is.
+        if (ingevuldWachtwoord == wachtwoord) {
+            JFrame optie = new JFrame("optie scherm");
             try {
-                optie.setContentPane(new optionScreen(optie).panel_optieScherm);      // hier zeg je waaruit die JFrame gaat bestaan, dus je kiest welk panel. let op dat je de panel public maakt in je code.
+                optie.setContentPane(new optionScreen(optie).panel_optieScherm);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-            optie.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);                 // hier word gezegd wat er gebeurt als er op sluiten gedrukt word, in dit geval word het programma afgesloten
-            optie.pack();                                                         // hier worden alle gui elementen uit het bestant "optie" op dezelfde JFrame gezet
-            optie.setVisible(true);                                               // spreekt wel voor zich, hier word de JFrame "optie" zichtbaar gemaakt
+            optie.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            optie.pack();
+            optie.setVisible(true);
             panel_Login.setVisible(false);
-            login.dispose();                                                      // hier word het scherm weggehaald zodra het goede wachtwoord ingevoerd word
+            login.dispose();
         } else {
             /* als het niet klopt, vraagt dit je om het opnieuw te proberen */
-
             JOptionPane.showMessageDialog(panel_Login, "Wrong combination, please try again!");
         }
     }

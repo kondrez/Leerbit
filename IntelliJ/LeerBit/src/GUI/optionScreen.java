@@ -19,10 +19,7 @@ public class optionScreen {
     private JButton button_import;
     private JButton button_addStudent;
     private JButton button_addCourse;
-    private JButton button3;
-    private JTable table_Leerlingen = null;
-    private JTable table_opdrachten = null;
-    public static String bestandLocatie = "C:\\test\\";
+    private static String bestandLocatie = "C:\\test\\";
 
     optionScreen(JFrame optie) throws SQLException {
         /* dit is een methode met daarin alle code voor de knoppen. */
@@ -42,8 +39,12 @@ public class optionScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 /* deze code word aangeroepen als er op de knop "opdrachten" gedrukt word */
-                String query = "Select * from vragen";
-                String message = "Your subjects: ";
+                String query = "Select v.vak_naam as vak, r.vraag_nummer as vraag, r.opdracht, " +
+                        "r.antwoord1 as A, r.antwoord2 as B, r.antwoord3 as C, r.antwoord4 as D, " +
+                        "r.juiste_antwoord as goed " +
+                        "from vraag r join vak v on r.vak_nummer = v.vak_nummer " +
+                        "order by v.vak_nummer asc, r.vraag_nummer asc;";
+                String message = "Your courses: ";
                 displayTable(query, message);
 
             }
@@ -53,13 +54,13 @@ public class optionScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 /* deze code word aangeroepen als er op de knop "button_scores" gedrukt word */
+                String query = "Select l.leerling_nummer, l.voor_naam, l.achter_naam, v.vak_naam, s.aantal_goed" +
+                        " from score s join leerling l on s.leerling_nummer = l.leerling_nummer" +
+                        " join vak v on s.vak_nummer = v.vak_nummer" +
+                        " order by l.leerling_nummer;";
+                String message = "Your scores:";
 
-                JFrame scores = new JFrame("scores scherm");
-                scores.setContentPane(new scoresScreen(scores).panel_scoresScreen);
-                scores.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                scores.pack();
-                scores.setVisible(true);
-                optie.dispose();
+                displayTable(query, message);
             }
         });
 
@@ -124,19 +125,19 @@ public class optionScreen {
             rs = dataBase.executeQuery(query);
 
             // construct a table model
-            assert rs != null;
-            table_opdrachten = new JTable(buildTableModel(rs));
+
+            JTable table = new JTable(buildTableModel(rs));
+            //JOptionPane.showMessageDialog(null, new JScrollPane(table));
+
+            // display the table in a message dialog
+            JOptionPane.showMessageDialog(panel_optieScherm, new JScrollPane(table), message,
+                    JOptionPane.INFORMATION_MESSAGE);
 
             // closing the resultset
             rs.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
-        // show the table in a message dialog
-        JOptionPane.showMessageDialog(panel_optieScherm, table_opdrachten, message,
-                JOptionPane.INFORMATION_MESSAGE, new ImageIcon(bestandLocatie + "leerbit2.png"));
-
     }
 
     private static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
@@ -171,12 +172,10 @@ public class optionScreen {
         java.util.List<String> data_leerling = new ArrayList<String>();
         java.util.List<String> data_vragen = new ArrayList<String>();
         java.util.List<String> data_score = new ArrayList<String>();
-        java.util.List<String> data_vak = new ArrayList<String>();
+        ResultSet rs;
 
-        /* De tabel leerling uitlezen, en dan opzetten in het bestandje leerling.csv */
-
-
-        ResultSet rs = dataBase.executeQuery("Select voor_naam from leerling");
+        /* De tabel leerling uitlezen, en dan opzetten in het bestand leerling.csv */
+        rs = dataBase.executeQuery("Select voor_naam from leerling");
 
         while (rs.next()) {
             String voor_naam = rs.getString("voor_naam");
@@ -189,39 +188,15 @@ public class optionScreen {
         assert false;
         writeToFile(listToArray(data_leerling), bestandLocatie + "leerling.csv");
 
-
-        /* De tabel vragen uitlezen, en dan omzetten in het .txt bestand vragen.csv */
-        while (rs.next()) {
-            // eerst moet je de lijn van het resultset opdelen in strings, per kolom
-            String id = rs.getString("vraag_nummer");
-            String vak_naam = rs.getString("vak_naam");
-            String opdracht = rs.getString("opdracht");
-            String antwoord1 = rs.getString("antwoord1");
-            String antwoord2 = rs.getString("antwoord2");
-            String antwoord3 = rs.getString("antwoord3");
-            String antwoord4 = rs.getString("antwoord4");
-            String juisteAntwoord = rs.getString("juiste_antwoord");
-
-            //daarna moet je het toevoegen aan de list data_vragen
-            data_vragen.add(id + "," + vak_naam + "," + opdracht + "," + antwoord1 + "," + antwoord2 + "," + antwoord3 + "," + antwoord4 + "," + juisteAntwoord);
-        }
-        // eerst het oude bestand verweideren
-        deleteFile(bestandLocatie + "vragen.csv");
-
-        // en dan schijven naar het bestand
-        assert false;
-        writeToFile(listToArray(data_vragen), bestandLocatie + "vragen.csv");
-
-
         // De tabel score uitlezen
         rs = dataBase.executeQuery("Select * from score");
 
         while (rs.next()) {
             String id = rs.getString("leerling_nummer");
-            String vak_naam = rs.getString("vak_naam");
+            String vak_nummer = rs.getString("vak_nummer");
             String aantal_goed = rs.getString("aantal_goed");
 
-            data_score.add(id + "," + vak_naam + "," + aantal_goed);
+            data_score.add(id + "," + vak_nummer + "," + aantal_goed);
         }
 
         deleteFile(bestandLocatie + "score.csv");
@@ -229,44 +204,52 @@ public class optionScreen {
         assert false;
         writeToFile(listToArray(data_score), bestandLocatie + "score.csv");
 
-        // De tabel vak uitlezen
-        rs = dataBase.executeQuery("Select * from vak");
+        //vragen uitlezen
+        rs = dataBase.executeQuery("Select opdracht, antwoord1, antwoord2, antwoord3," +
+                " antwoord4, juiste_antwoord from vraag" +
+                " order by vak_nummer ASC, vraag_nummer ASC;");
+        int teller = 0;
+        int vakTeller = 1;
 
-        while (rs.next()) {
-            String vak_naam = rs.getString("vak_naam");
-            String aantal_vragen = rs.getString("hoeveelheid_vragen");
+        // groote van de resultset vinden
+        int size = 0;
+        if (rs != null) {
+            rs.last();    // moves cursor to the last row
+            size = rs.getRow(); // get row id
+        }
+        rs.first();
 
-            data_vak.add(vak_naam + "," + aantal_vragen);
+        while (teller <= size + 1) {
+            if (teller % 16 == 0) {
+                // voor 15 vragen de naam van het vak afdrukken
+                ResultSet rsVak = dataBase.executeQuery("Select vak_naam from vak where vak_nummer = " + vakTeller + ";");
+                rsVak.next();
+                data_vragen.add(rsVak.getString(1));
+                rsVak.close();
+                vakTeller++;
+            } else {
+                // als het geen vaknaam regel is, data uitlezen en toevoegen aan de lijst
+                String opdracht = rs.getString("opdracht");
+                String antwoord1 = rs.getString("antwoord1");
+                String antwoord2 = rs.getString("antwoord2");
+                String antwoord3 = rs.getString("antwoord3");
+                String antwoord4 = rs.getString("antwoord4");
+                String juiste_antwoord = rs.getString("juiste_antwoord");
+
+                data_vragen.add(opdracht + "," + antwoord1 + "," + antwoord2 + "," + antwoord3
+                        + "," + antwoord4 + "," + juiste_antwoord + ",");
+
+                // naar de volgende regel van rs
+                rs.next();
+            }
+
+            teller++;
         }
 
-        deleteFile(bestandLocatie + "vak.csv");
+        deleteFile(bestandLocatie + "vraag.csv");
 
         assert false;
-        writeToFile(listToArray(data_vak), bestandLocatie + "vak.csv");
-
-        //vragen toevoegen
-        rs = dataBase.executeQuery("Select * from vragen");
-
-        while (rs.next()) {
-            String vraag_nummer = rs.getString("vraag_nummer");
-            String vak_naam = rs.getString("vak_naam");
-            String opdracht = rs.getString("opdracht");
-            String antwoord1= rs.getString("antwoord1");
-            String antwoord2= rs.getString("antwoord2");
-            String antwoord3= rs.getString("antwoord3");
-            String antwoord4= rs.getString("antwoord4");
-            String juiste_antwoord= rs.getString("juiste_antwoord");
-
-
-
-            data_vragen.add(vraag_nummer + "," + vak_naam +","+opdracht+","+antwoord1+","+ antwoord2+","+antwoord3
-                    +","+antwoord4+","+ juiste_antwoord);
-        }
-
-        deleteFile(bestandLocatie + "vragen.csv");
-
-        assert false;
-        writeToFile(listToArray(data_vragen), bestandLocatie + "vragen.csv");
+        writeToFile(listToArray(data_vragen), bestandLocatie + "vraag.csv");
 
 
         System.out.println("export successful");
