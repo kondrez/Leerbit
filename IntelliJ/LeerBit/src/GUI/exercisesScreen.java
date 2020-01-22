@@ -3,15 +3,16 @@ package GUI;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class exercisesScreen {
-    private JTable table_opdrachten;
     public JPanel panel_opdrachten;
     private JLabel label_messages;
-    private JScrollPane scrollPane_omTabel;
-    private JButton button_submit;
     private JButton button_home;
+    private JTextField textField_courseName;
+    private JButton button_addCourse;
 
     public exercisesScreen(JFrame exercises) {
         button_home.addActionListener(new ActionListener() {
@@ -27,6 +28,32 @@ public class exercisesScreen {
                 optie.pack();                                                  // hier worden alle gui elementen uit het bestant "optie" op dezelfde JFrame gezet
                 optie.setVisible(true);                                        // spreekt wel voor zich, hier word de JFrame "optie" zichtbaar gemaakt
                 exercises.dispose();
+            }
+        });
+
+        button_addCourse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String vak_naam = textField_courseName.getText();
+                int vak_nummer = 0;
+                int hoeveelheid_vragen = 15;
+                // get the maximum vak_nummer, than add 1 to get the new;
+                ResultSet rs = null;
+                try {
+                    rs = dataBase.executeQuery("select max(vak_nummer) from vak;");
+                    rs.next();
+                    vak_nummer = (rs.getInt(1)) + 1;
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+                String query = "insert into vak values ('" +
+                        vak_nummer + "','" + vak_naam + "','" + hoeveelheid_vragen + "');";
+                try {
+                    dataBase.executeUpdate(query);
+                } catch (SQLException | FileNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+                System.out.println("course add sucessfull");
             }
         });
     }
