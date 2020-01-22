@@ -189,14 +189,18 @@ public class optionScreen {
         /* De tabel leerling uitlezen, en dan opzetten in het bestand leerling.csv */
         rs = dataBase.executeQuery("Select voor_naam from leerling");
 
+        String[] namen = new String[5];
+        int naamTeller = 0;
         while (rs.next()) {
             String voor_naam = rs.getString("voor_naam");
 
-            data_leerling.add(voor_naam);
+            namen[naamTeller] = voor_naam;
+            naamTeller++;
         }
 
-        deleteFile(bestandLocatie + "leerling.csv");
+        data_leerling.add(namen[0] + "," + namen[1] + "," + namen[2] + "," + namen[3] + "," + namen[4]);
 
+        deleteFile(bestandLocatie + "leerling.csv");
         assert false;
         writeToFile(listToArray(data_leerling), bestandLocatie + "leerling.csv");
 
@@ -268,7 +272,7 @@ public class optionScreen {
     }
 
     private static void deleteFile(String path) {
-        // deletes a file with an absolute patch
+        // deletes a file with an absolute path
 
         File file = new File(path);
 
