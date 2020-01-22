@@ -26,24 +26,6 @@
 
 
 
-const size_t BUFFER_SZ = 40;
-
-char woord[BUFFER_SZ];
-char username[BUFFER_SZ];
-
-char lines[15][200];
-
-char vraag[60];
-char antwoord1[60];
-char antwoord2[60];
-char antwoord3[60];
-char antwoord4[60];
-char juisteAntwoord[60];
-
-
-
-
-
 /* Allocation I2C (RTC)
 ** SDA - 20
 ** SCL - 21
@@ -127,10 +109,32 @@ int vak_state;
 int resultaten_state;
 int profiel_state;
 
-int user_Id;
+int user_Id = 0;
+char user_name[10];
+
+const size_t BUFFER_SZ = 40;
+
+char woord[BUFFER_SZ];
+char username[BUFFER_SZ];
+
+char lines[80][50];
+
+char vraag[60];
+char antwoord1[60];
+char antwoord2[60];
+char antwoord3[60];
+char antwoord4[60];
+char juisteAntwoord[60];
+
+int vak_score_0[4];
+int vak_score_1[4];
+int vak_score_2[4];
+int vak_score_3[4];
+int vak_score_4[4];
+int vak_score_5[4];
 
 
-// Startup screen
+// Startup screen logo
 #define gear_width 30
 #define gear_height 30
 static const unsigned char gear_logo[] U8X8_PROGMEM = {
@@ -151,35 +155,35 @@ static const unsigned char gear_logo[] U8X8_PROGMEM = {
 
 
 
-
-
 void setup() {
   Serial.begin(9600); // Start serial communication
-
+  u8g2.begin(7, U8X8_PIN_NONE, U8X8_PIN_NONE, 31, 3, 29); // Start oled display
 
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
 
 
-  Serial.print("Initializing SD card...");
+  Serial.println("Initializing SD card...");
 
   if (!SD.begin(53)) {
     Serial.println("initialization failed!");
-    return;
+
+    while (1) {
+      insert_Sd();
+      delay(1000);
+      // return;
+    }
   }
   Serial.println("initialization done.");
+
+
+
 
   linesFromFile(); // read from sd card
 
 
-
-
-
-
-
-  u8g2.begin(7, U8X8_PIN_NONE, U8X8_PIN_NONE, 31, 3, 29); // Start oled display
-
+  init_Screen(); //startup display
 
   Serial.println("Initializing Leerbit...");
 
@@ -229,7 +233,7 @@ void setup() {
 
   pinMode(photocellPin, INPUT); // Initialize the Light sensor pin as an input
 
-  init_Screen(); //startup display
+
 
   delay(1500);
 
@@ -242,17 +246,90 @@ void loop() {
 
   lightValue = analogRead(photocellPin);  //Store the value from the Light sensor in the variable
 
+  switch (user_Id) {
+    case 0:
+      strncpy ( user_name, "Anoniem", sizeof(username));
+      break;
+    case 1:
+      strncpy ( user_name, "Eddy", sizeof(username));
+      break;
+    case 2:
+      strncpy ( user_name, "Lucas", sizeof(username));
+      break;
+    case 3:
+      strncpy ( user_name, "Daniel", sizeof(username));
+      break;
+    case 4:
+      strncpy ( user_name, "Marko", sizeof(username));
+      break;
+    case 5:
+      strncpy ( user_name, "Christiaan", sizeof(username));
+      break;
+    default:
+      // if nothing else matches, do the default
+      // default is optional
+      break;
+  }
+
+
+
+  char data[100];
+  char vak1[16];
+  char vak2[16];
+  char vak3[16];
+  char vak4[16];
+  char vak5[16];
+
+  for (int i = 0; i < 65; i += 16) {
+    for (int n = 0; n < 60; n++) {
+      vraag[n] = (char)0;
+    }
+    parseLine(i);
+
+    if (i == 0) {
+      strncpy ( vak1, vraag, sizeof(vak1) );
+    }
+    else if (i == 16) {
+      strncpy ( vak2, vraag, sizeof(vak2) );
+    }
+
+    else if (i == 32) {
+      strncpy ( vak3, vraag, sizeof(vak3) );
+    }
+    else if (i == 48) {
+      strncpy ( vak4, vraag, sizeof(vak4) );;
+    }
+
+    else if (i == 64) {
+      strncpy ( vak5, vraag, sizeof(vak5) );
+    }
+
+
+  }
+
+
+
+
+  sprintf(data, "%s\n%s\n%s\n%s\n%s", vak1, vak2, vak3, vak4, vak5);
+  //Serial.println(data);
+
+
+
+
   menu_state = menu_Screen();
+  Serial.print("menu state: ");
   Serial.println(menu_state);
 
 
 
 
   if (menu_state == 1) {
-
-    vak_state = vakken_screen();
+    int score = 0;
+    vak_state = vakken_screen(data);
     if (vak_state == 1) {
-      for (int i = 1; i <= 15; i++) {
+
+
+      for (int i = 2; i <= 16; i++) {
         for (int m = 0; m < 60; m++) {
           vraag[m] = (char)0;
           antwoord1[m] = (char)0;
@@ -262,40 +339,117 @@ void loop() {
           juisteAntwoord[m] = (char)0;
         }
         parseLine(i - 1);
-        Serial.println(juisteAntwoord);
-        vraag_Screen(i, vraag, antwoord1, antwoord2, antwoord3, antwoord4, juisteAntwoord[0]);
 
-        // vraag_Screen(i, "Wat is het doel?", "niks", "wat", "hoe", "yup", 'b');
+        boolean goed = vraag_Screen(user_name, i - 1, vraag, antwoord1, antwoord2, antwoord3, antwoord4, juisteAntwoord[0]);
+        if (goed == true) {
+          score++;
+        }
+
       }
+      put_Score(user_Id, 0, score);
+      score_screen(score, user_name);
+      delay(3000);
+
     }
 
     else if (vak_state == 2) {
-      for (int i = 1; i <= 15; i++) {
-        vraag_Screen(i, "Wat is het woord?", "niks", "wat", "hoe", "yup", 'b');
+      for (int i = 18; i <= 32; i++) {
+        for (int m = 0; m < 60; m++) {
+          vraag[m] = (char)0;
+          antwoord1[m] = (char)0;
+          antwoord2[m] = (char)0;
+          antwoord3[m] = (char)0;
+          antwoord4[m] = (char)0;
+          juisteAntwoord[m] = (char)0;
+        }
+        parseLine(i - 1);
+
+        boolean goed = vraag_Screen(user_name, i - 17, vraag, antwoord1, antwoord2, antwoord3, antwoord4, juisteAntwoord[0]);
+        if (goed == true) {
+          score++;
+        }
       }
+      put_Score(user_Id, 1, score);
+      score_screen(score, user_name);
+      delay(3000);
+
     }
 
     else if (vak_state == 3) {
-      for (int i = 1; i <= 15; i++) {
-        vraag_Screen(i, "Wat is het getal?", "een", "twee", "vijf", "zeven", 'b');
+      for (int i = 34; i <= 48; i++) {
+        for (int m = 0; m < 60; m++) {
+          vraag[m] = (char)0;
+          antwoord1[m] = (char)0;
+          antwoord2[m] = (char)0;
+          antwoord3[m] = (char)0;
+          antwoord4[m] = (char)0;
+          juisteAntwoord[m] = (char)0;
+        }
+        parseLine(i - 1);
+
+        boolean goed = vraag_Screen(user_name, i - 33, vraag, antwoord1, antwoord2, antwoord3, antwoord4, juisteAntwoord[0]);
+        if (goed == true) {
+          score++;
+        }
       }
+
+      put_Score(user_Id, 2, score);
+      score_screen(score, user_name);
+      delay(3000);
     }
 
     else if (vak_state == 4) {
-      for (int i = 1; i <= 15; i++) {
-        vraag_Screen(i, "Wat is het?", "niks", "wat", "hoe", "yup", 'b');
+      for (int i = 50; i <= 64; i++) {
+        for (int m = 0; m < 60; m++) {
+          vraag[m] = (char)0;
+          antwoord1[m] = (char)0;
+          antwoord2[m] = (char)0;
+          antwoord3[m] = (char)0;
+          antwoord4[m] = (char)0;
+          juisteAntwoord[m] = (char)0;
+        }
+        parseLine(i - 1);
+
+        boolean goed = vraag_Screen(user_name, i - 49, vraag, antwoord1, antwoord2, antwoord3, antwoord4, juisteAntwoord[0]);
+        if (goed == true) {
+          score++;
+        }
       }
+      put_Score(user_Id, 3, score);
+      score_screen(score, user_name);
+      delay(3000);
     }
 
     else if (vak_state == 5) {
-      for (int i = 1; i <= 15; i++) {
-        vraag_Screen(i, "Wat is het antwoord?", "niks", "wat", "hoe", "yup", 'b');
+      for (int i = 66; i <= 80; i++) {
+        for (int m = 0; m < 60; m++) {
+          vraag[m] = (char)0;
+          antwoord1[m] = (char)0;
+          antwoord2[m] = (char)0;
+          antwoord3[m] = (char)0;
+          antwoord4[m] = (char)0;
+          juisteAntwoord[m] = (char)0;
+        }
+        parseLine(i - 1);
+
+        boolean goed = vraag_Screen(user_name, i - 55, vraag, antwoord1, antwoord2, antwoord3, antwoord4, juisteAntwoord[0]);
+        if (goed == true) {
+          score++;
+        }
       }
+      put_Score(user_Id, 4, score);
+      score_screen(score, user_name);
+      delay(3000);
     }
 
 
 
-    delay(1000);
+    //    Serial.println(vak_score_0[0]);
+    //    Serial.println(vak_score_0[1]);
+    //    Serial.println(vak_score_0[2]);
+    //    Serial.println(vak_score_0[3]);
+    //    Serial.println(vak_score_0[4]);
+
     clear_leds();
   }
 
@@ -320,6 +474,10 @@ void loop() {
       user_Id = 4;
     }
 
+    else if (profiel_state == 5) {
+      user_Id = 5;
+    }
+
 
 
 
@@ -327,55 +485,126 @@ void loop() {
 
 
   else if (menu_state == 3) {
-    resultaten_state = resultaten_screen();
+    resultaten_state = resultaten_screen(data);
     if (resultaten_state == 1) {
-      while (1) {
 
-        score_screen();
-      }
+      choose_Score(user_Id, 0, user_name);
+
+
     }
     else if (resultaten_state == 2) {
-      while (1) {
 
-        score_screen();
-      }
+
+      choose_Score(user_Id, 1, user_name);
+
     }
-    if (resultaten_state == 3) {
-      while (1) {
+    else if (resultaten_state == 3) {
 
-        score_screen();
-      }
+
+      choose_Score(user_Id, 2, user_name);
+
     }
     else if (resultaten_state == 4) {
-      while (1) {
 
-        score_screen();
-      }
+
+      choose_Score(user_Id, 3, user_name);
+
     }
     else if (resultaten_state == 5) {
-      while (1) {
 
-        score_screen();
-      }
-    }
-    else if (resultaten_state == 6) {
-      while (1) {
 
-        score_screen();
-      }
-    }
-    else if (resultaten_state == 7) {
-      while (1) {
+      choose_Score(user_Id, 4, user_name);
 
-        score_screen();
-      }
     }
+
+
   }
 
 
 
 
 }
+
+
+void put_Score(int user_Id, int vak, int score) {
+
+
+
+
+  switch (user_Id) {
+    case 0:
+      vak_score_0[vak] = score;
+      break;
+    case 1:
+      vak_score_1[vak] = score;
+      break;
+    case 2:
+      vak_score_2[vak] = score;
+      break;
+    case 3:
+      vak_score_3[vak] = score;
+      break;
+    case 4:
+      vak_score_4[vak] = score;
+      break;
+    case 5:
+      vak_score_5[vak] = score;
+      break;
+    default:
+      // if nothing else matches, do the default
+      // default is optional
+      break;
+  }
+
+
+
+
+}
+
+
+
+
+void choose_Score(int user_id, int idnr, char user_name[]) {
+
+
+
+
+  switch (user_Id) {
+    case 0:
+      score_screen(vak_score_0[idnr], user_name);
+      delay(4000);
+      break;
+    case 1:
+      score_screen(vak_score_1[idnr], user_name);
+      delay(4000);
+      break;
+    case 2:
+      score_screen(vak_score_2[idnr], user_name);
+      delay(4000);
+      break;
+    case 3:
+      score_screen(vak_score_3[idnr], user_name);
+      delay(4000);
+      break;
+    case 4:
+      score_screen(vak_score_4[idnr], user_name);
+      delay(4000);
+      break;
+    case 5:
+      score_screen(vak_score_5[idnr], user_name);
+      delay(4000);
+      break;
+    default:
+      // if nothing else matches, do the default
+      // default is optional
+      break;
+  }
+
+
+
+
+}
+
 
 
 
@@ -432,7 +661,7 @@ void linesFromFile() {
   int linenr = 0;
 
   File myFile;
-  myFile = SD.open("test.txt");
+  myFile = SD.open("vraag.csv");
 
   if (myFile) {
     int pos = 0;    // current write position in buffer
@@ -465,7 +694,14 @@ void linesFromFile() {
 }
 
 
+void insert_Sd() {
+  u8g2.clearBuffer();          // clear the internal memory
+  u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
+  u8g2.drawStr(0, 18, "Please insert SD card"); // write something to the internal memory
+  u8g2.drawStr(0, 28, "And restart device!"); // write something to the internal memory
+  u8g2.sendBuffer();          // transfer internal memory to the display
 
+}
 
 
 
@@ -477,8 +713,6 @@ void init_Screen() {
   u8g2.setBitmapMode(1 /* solid */);
   u8g2.drawXBMP(50, 25, gear_width, gear_height, gear_logo);
   u8g2.sendBuffer();          // transfer internal memory to the display
-
-
 
 }
 
@@ -495,11 +729,11 @@ int menu_Screen() {
 
 }
 
-int vakken_screen() {
+int vakken_screen(char vakken[]) {
 
   u8g2.clearBuffer();          // clear the internal memory
   u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
-  return  u8g2.userInterfaceSelectionList("Vakken", 1, "Nederlands\nRekenen\nBiologie\nEngels\nKunst\nOrientatie\nAlgemene kennis");
+  return  u8g2.userInterfaceSelectionList("Vakken", 1, vakken);
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
@@ -517,11 +751,11 @@ int profiel_screen() {
 
 
 }
-int resultaten_screen() {
+int resultaten_screen(char vakken[]) {
 
   u8g2.clearBuffer();          // clear the internal memory
   u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
-  return  u8g2.userInterfaceSelectionList("Resultaten", 1, "Rekenen\nBiologie\nEngels\nKunst\nOrientatie\nAlgemene kennis");
+  return  u8g2.userInterfaceSelectionList("Resultaten", 1, vakken);
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
@@ -529,20 +763,29 @@ int resultaten_screen() {
 
 
 }
-void score_screen() {
+void score_screen(int score, char naam[]) {
   u8g2.clearBuffer();          // clear the internal memory
+
+  u8g2.setFont(u8g2_font_t0_12_me); // choose a suitable font
+
+  u8g2.setCursor(14, 12);
+  u8g2.print("Id:");
+  u8g2.print(naam);
+
+
   u8g2.setFont(u8g2_font_helvB12_tr); // choose a suitable font
-  u8g2.setCursor(0, 12);
-  u8g2.print( "vak."); // write something to the internal memory
-  u8g2.setCursor(0, 30);
-  u8g2.print("Score.");
+
+  u8g2.setCursor(14, 30);
+  u8g2.print("Score : ");
+  u8g2.print(score);
+  u8g2.print("/15");
 
   u8g2.sendBuffer();          // transfer internal memory to the display
 
 
 }
 
-void vraag_Screen(int vraagNr, char vraag[], char a1[], char a2[], char a3[], char a4[] , char Antwoord) {
+boolean vraag_Screen(char ID[], int vraagNr, char vraag[], char a1[], char a2[], char a3[], char a4[] , char Antwoord) {
 
 
 
@@ -552,7 +795,12 @@ void vraag_Screen(int vraagNr, char vraag[], char a1[], char a2[], char a3[], ch
   u8g2.print(vraagNr);
   u8g2.print(".");
 
-  u8g2.setCursor(0, 16);
+  u8g2.setCursor(60, 8);
+  u8g2.print("Id:");
+  u8g2.print(ID);
+
+
+  u8g2.setCursor(0, 18);
   u8g2.print(vraag); // write something to the internal memory
 
   u8g2.setCursor(0, 45);
@@ -569,11 +817,13 @@ void vraag_Screen(int vraagNr, char vraag[], char a1[], char a2[], char a3[], ch
   u8g2.print(a4); // write something to the internal memory
   u8g2.sendBuffer();          // transfer internal memory to the display
 
-  check_vraag(Antwoord, vraagNr);
+  boolean goed = check_vraag(Antwoord, vraagNr);
+
+  return goed;
 
 }
 
-void check_vraag(char juisteAntwoord, int vraagNummer) {
+boolean check_vraag(char juisteAntwoord, int vraagNummer) {
   char ant = 'e';
 
 
@@ -606,10 +856,12 @@ void check_vraag(char juisteAntwoord, int vraagNummer) {
 
   if  (ant == juisteAntwoord) {
     turn_Led(vraagNummer, 1);
+    return true;
   }
 
   else {
     turn_Led(vraagNummer, 0);
+    return false;
   }
 
 }
