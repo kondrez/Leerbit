@@ -40,7 +40,7 @@ class dataBase {
 
         try {
             assert conn != null;
-            st = conn.createStatement();
+            st = conn.prepareStatement(query);
 
             // daarna een resultset, dit is een lijst met alle resultaten van de query
             assert st != null;
@@ -58,7 +58,7 @@ class dataBase {
 
         Connection conn = makeConnection();
 
-        Statement st = conn.createStatement();
+        PreparedStatement st = conn.prepareStatement(query);
 
         // de oude data uit te database verweideren
         st.executeUpdate(query);

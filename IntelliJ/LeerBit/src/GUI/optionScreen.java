@@ -20,7 +20,7 @@ public class optionScreen {
     private JButton button_addStudent;
     private JButton button_addCourse;
     private JButton button_addQuestions;
-    private static String bestandLocatie = "C:\\test\\";
+    private static String bestandLocatie = "F:\\";
 
     optionScreen(JFrame optie) throws SQLException {
         /* dit is een methode met daarin alle code voor de knoppen. */

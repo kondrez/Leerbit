@@ -48,17 +48,17 @@ CREATE TABLE score (
 
 CREATE TABLE user (
 	id int(5) NOT NULL,
-	username varchar(25) NOT NULL,
+	username int(100) NOT NULL,
 	password int(100) NOT NULL,
     primary key (id)
 );
 
 insert into leerling values 
-('1','marko','rodriques','13'),
-('2','eddy','al bazze','15'),
-('3','Daniel ','Bleeker','14'),
-('4','cristiaan','calf','63'),
-('5','lucas','dekker','14');
+('1','Marko','Rodriques','13'),
+('2','Eddy','Al Bazze','15'),
+('3','Daniel','Bleeker','14'),
+('4','Cristiaan','Calf','63'),
+('5','Lucas','Dekker','14');
 
 insert into vak values 
 ('1','rekenen','15'),
@@ -83,25 +83,25 @@ insert into vraag values
 ('9','1','42-18=?','33','24','60','28','b'),
 ('10','1','60-15=?','45','65','50','40','a'),
 ('11','1','80:10=?','70','90','8','800','c'),
-('12','1','56:8=?','48','64','50','7','d'),
+('12','1','56:8=?','48','6','14','7','d'),
 ('13','1','18*2=?','36','16','34','14','a'),
 ('14','1','25-13=?','12','13','38','35','a'),
 ('15','1','10*10=?','1','10','100','20','c'),
 ('1','2','Start jaar WWI=?','1914','1939','1917','1945','a'),
 ('2','2','Start jaar WWII=?','1939','1945','1918','1925','a'),
-('3','2','Wie heeft 5 keer het WK gewonnen=?','Duitsland','Frankrijk','Brazilie','Nederland','c'),
-('4','2','Wie heeft Amerika ontdekt=?','Vincent van Gogh','Columbus','Hitler','Stalin','b'),
-('5','2','Oprichtings jaar VOC=?','1666','1712','1612','1559','c'),
-('6','2','Eind jaar slavernij=?','1492','1863','1526','1777','b'),
-('7','2','Andere naam Grote oorlog=?','WWI',' WWII','WWIII','Koude oorlog','a'),
-('8','2','Start datum koude oorlog=?','1955','1969','1958','1947','d'),
-('9','2','Leider van de Nazi\'s=?','Hitler','Stalin','Trump','Fuhrer','a'),
-('10','2','Startdatum vietnaamsoorlog=?','1966','1954','1955','1956','c'),
-('11','2','Periode van het jaar 100 tot 500=?','Prehistorie','Moderne tijd','Middeleeuwen','Gouden eeuw','c'),
-('12','2','Wie schilderde De nachtwacht=?','Vincent van Gogh',' Rembrandt van Rijn','Pablo Picasso','Salvador Dali','b'),
-('13','2','Wie heeft de Mona Lisa geschilderd=?','Leonardo Da vinci',' Vincent van Gogh',' Pablo Picasso','Rembrandt  van Rijn','a'),
-('14','2','Hoe heette de vader van Anne Frank=?',' Bert',' Otto',' Jan',' Motto','b'),
-('15','2','Wie was de eerste vrouwelijke huisarts=?','Aletta Jacobs',' Mees Berg',' Johanna Jo','Ashe Best','a'),
+('3','2','Wie won 5 keer het WK?','DE','FR','Braz','NL','c'),
+('4','2','Wie ontdekte Amerika?','van Gogh','Columbus','Hitler','Stalin','b'),
+('5','2','Oprichtings jaar VOC?','1666','1712','1612','1559','c'),
+('6','2','Eind jaar slavernij?','1492','1863','1526','1777','b'),
+('7','2','Andere naam Grote oorlog?','WWI','WWII','WWIII','\'nam','a'),
+('8','2','Start datum koude oorlog?','1955','1969','1958','1947','d'),
+('9','2','Leider van de Nazi\'s?','Hitler','Stalin','Trump','Fuhrer','a'),
+('10','2','Start vietnaamsoorlog?','1966','1954','1955','1956','c'),
+('11','2','napoleon was keizer van?','DE','NL','FR','RU','c'),
+('12','2','De nachtwacht is van?','van Gogh',' Rembrandt','Picasso','Dali','b'),
+('13','2','Mona lisa is van?','Da vinci','van Gogh','Picasso','Rembrandt','a'),
+('14','2','de vader van Anne Frank?',' Bert',' Otto',' Jan',' Motto','b'),
+('15','2','eerste vrouwelijke huisarts?','Aletta','Berg','Johanna','Ashe','a'),
 ('1','3','wat is huis in het engels=?','bed','house','heist','home','b'),
 ('2','3','wat is "bad" in het engels=?','bath','bed','toilet','couch','a'),
 ('3','3','wat is "bezem" in het engels=?','bord','plank','broom','boat','c'),
@@ -149,4 +149,4 @@ insert into vraag values
 ('15','5','Vt wij-vorm van juichen=?','Juichden','juichen','juicht','joogden','a');
 
 insert into user values 
-('1','admin','92668751');
+('1','92668751','92668751');

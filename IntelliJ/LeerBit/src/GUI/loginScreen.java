@@ -35,9 +35,9 @@ public class loginScreen<Private> {
                  er word gekeken of het wachtwoord klopt. zo ja, doorsturen naar volgende scherm.
                  zo nee message laten zien met "Try again!' */
 
-                String ingevuldeUsername = textField_username.getText();
+                int ingevuldeUsernameHash = textField_username.getText().hashCode();
                 int wachtwoordHash = String.valueOf(textField_password.getPassword()).hashCode();
-                String query = "SELECT password FROM user WHERE username = '" + ingevuldeUsername + "';";
+                String query = "SELECT password FROM user WHERE username = '" + ingevuldeUsernameHash + "';";
                 int opgeslagenHash = 0;
                 ResultSet rs;
 
