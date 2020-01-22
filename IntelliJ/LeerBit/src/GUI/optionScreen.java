@@ -55,7 +55,8 @@ public class optionScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 /* deze code word aangeroepen als er op de knop "button_scores" gedrukt word */
-                String query = "Select l.leerling_nummer, l.voor_naam, l.achter_naam, v.vak_naam, s.aantal_goed" +
+                String query = "Select l.leerling_nummer, l.voor_naam, l.achter_naam, v.vak_naam, s.aantal_goed, " +
+                        "v.hoeveelheid_vragen" +
                         " from score s join leerling l on s.leerling_nummer = l.leerling_nummer" +
                         " join vak v on s.vak_nummer = v.vak_nummer" +
                         " order by l.leerling_nummer;";
@@ -138,9 +139,7 @@ public class optionScreen {
             rs = dataBase.executeQuery(query);
 
             // construct a table model
-
             JTable table = new JTable(buildTableModel(rs));
-            //JOptionPane.showMessageDialog(null, new JScrollPane(table));
 
             // display the table in a message dialog
             JOptionPane.showMessageDialog(panel_optieScherm, new JScrollPane(table), message,
@@ -305,6 +304,19 @@ public class optionScreen {
         /* this method reads a .csv file */
         String deleteQuery = "DELETE FROM score WHERE leerling_nummer <= 1000000";
         String updateQuery;
+        ResultSet rs;
+
+        // het aantal vakken krijgen
+        int aantalVakken;
+        rs = dataBase.executeQuery("select count(vak_nummer) from vak");
+        rs.next();
+        aantalVakken = rs.getInt(1);
+
+        // het aantal leerlingen verkrijgen
+        int aantalLeerlingen;
+        rs = dataBase.executeQuery("select count(leerling_nummer) from leerling");
+        rs.next();
+        aantalLeerlingen = rs.getInt(1);
 
         // de oude tuples verweideren
         dataBase.executeUpdate(deleteQuery);
@@ -322,11 +334,15 @@ public class optionScreen {
             while ((regel = input.readLine()) != null) {
                 // velden is een Array, en met line.split vul je deze met de waardes, gesplit bij de ","
                 elementen = regel.split(",");
+                int momenteleVak = Integer.parseInt(elementen[1]);
+                int momenteleLeerling = Integer.parseInt(elementen[0]);
 
-                updateQuery = "INSERT INTO score VALUES\n"
-                        + "('" + elementen[0] + "','" + elementen[1] + "',' " + elementen[2] + "');\n";
+                if (momenteleVak <= aantalVakken && momenteleLeerling <= aantalLeerlingen) {
+                    updateQuery = "INSERT INTO score VALUES\n"
+                            + "('" + elementen[0] + "','" + elementen[1] + "',' " + elementen[2] + "');\n";
 
-                dataBase.executeUpdate(updateQuery);
+                    dataBase.executeUpdate(updateQuery);
+                }
             }
         } finally {
             input.close();

@@ -62,7 +62,10 @@ insert into leerling values
 
 insert into vak values 
 ('1','rekenen','15'),
-('2','geschiedenis','15');
+('2','geschiedenis','15'),
+('3','engels','15'),
+('4','aardrijkskunde','15'),
+('5','nederlands','15');
 
 insert into score values 
 ('2','1','1'),
@@ -98,7 +101,52 @@ insert into vraag values
 ('12','2','Wie schilderde De nachtwacht=?','Vincent van Gogh',' Rembrandt van Rijn','Pablo Picasso','Salvador Dali','b'),
 ('13','2','Wie heeft de Mona Lisa geschilderd=?','Leonardo Da vinci',' Vincent van Gogh',' Pablo Picasso','Rembrandt  van Rijn','a'),
 ('14','2','Hoe heette de vader van Anne Frank=?',' Bert',' Otto',' Jan',' Motto','b'),
-('15','2','Wie was de eerste vrouwelijke huisarts=?','Aletta Jacobs',' Mees Berg',' Johanna Jo','Ashe Best','a');
+('15','2','Wie was de eerste vrouwelijke huisarts=?','Aletta Jacobs',' Mees Berg',' Johanna Jo','Ashe Best','a'),
+('1','3','wat is huis in het engels=?','bed','house','heist','home','b'),
+('2','3','wat is "bad" in het engels=?','bath','bed','toilet','couch','a'),
+('3','3','wat is "bezem" in het engels=?','bord','plank','broom','boat','c'),
+('4','3','wat is "tijd" in het engels=?','time','tooth','table','barn','a'),
+('5','3','wat is "boos" in het engels=?','bees','born','barn','angry','d'),
+('6','3','wat is "monitor"=?','tafel','trap','beeldscherm','toetsenbord','c'),
+('7','3','wat is "bag"=?','tas','krat','fiets','scooter','a'),
+('8','3','wat is "cup"=?','bord','mes','kop','schotel','c'),
+('9','3','wat is "knife"=?','mes','zwaard','schep','hakbijl','a'),
+('10','3','wat is "book"=?','brood','boek','bad','ketting','c'),
+('11','3','wat is "handschoen" in het engels=?','guard','lighter','glove','shoe','c'),
+('12','3','wat is "kussen" in het engels=?','powder','bucket','bottle','pillow','d'),
+('13','3','wat is "helm" in het engels=?','helmet','kneepads','bucket','match','a'),
+('14','3','wat is "kast" in het engels=?','speaker','box','closet','bike','c'),
+('15','3','wat is "bank" in het engels=?','couch','chair','bed','bath','a'),
+('1','4','kleinste continent=?','Australie','Amerika','Europa','Azie','a'),
+('2','4','grootste continent=?','Azie','Europa','Amerika','Afrika','a'),
+('3','4','Grootste land ter wereld=?','Rusland','VS','China','NL','a'),
+('4','4','Grootste rivier in Egypte=?','Nijl','Rijn','Ob','Amoer','a'),
+('5','4','Grootste berg ter wereld=?','Cho Oyu','K2','Everest','Lhotse','c'),
+('6','4','wat is de meest gesrpoken taal=?','Engels','Mandarijns','Nederlands','Amerikaans','b'),
+('7','4','grootste meer ter wereld=?','Kaspische Zee','Huronmeer','Baikalmeer','Ladogameer','a'),
+('8','4','Meest bevolkte land=?','Engeland','india','VS','China','d'),
+('9','4','Hoofdstad NL=?','Den Haag','Amsterdam','Rotterdam','Utrecht','b'),
+('10','4','Hoofdstad Ghana =?','Cairo','Accra','London','Damascus','b'),
+('11','4','Hoofdstad UK=?','London','Washington','Bejing','Wales','a'),
+('12','4','Hoofdstad VS=?','New York','Washington','Alaska','Mexico','b'),
+('13','4','Hoofdstad Belgie=?','Amsterdam','Den Haag','Berlijn','Brussel','d'),
+('14','4','Hoofdstad China=?','Hongkong','Japan','Bejing','Tokyo','c'),
+('15','4','Kleinste land ter wereld=?','Vaticaanstad','NL','Belgie','Luxemburg','a'),
+('1','5','Vk-vorm van lopen=?','loop','liepen','liep','loopte','a'),
+('2','5','Vt ik-vorm van zwemmen=?','Zwemde','Zwommen','Zwem','Zwom','d'),
+('3','5','Vt hij-vorm van rennen=?','rennen','rende','ronde','rande','b'),
+('4','5','Wij-vorm van duiken=?','doken','duikten','duiken','duikte','b'),
+('5','5','Vt wij-vorm schieten=?','schietten','schieten','schoot','schoten','d'),
+('6','5','Vt hij-vorm knippen =?','knopte','knipten','knipte','','c'),
+('7','5','Vt zij-vorm slaan=?','sloeg','slaande','sloegen','slagen','a'),
+('8','5','Voltooid deelwoord Sprinten"=?','Gesprinten','versprint','gesprint','sprinten','c'),
+('9','5','Voltooid deelwoord zuigen"=?','Zoog','Gezuigd','Verzogen','zuigde','b'),
+('10','5','Ik-vorm van kruipen"=?','kroop','kruip','kropen','kruipte','b'),
+('11','5','Wij-vorm Vt van Koppen=?','Kopten','Koppten','Koptten','Kopte','a'),
+('12','5','Hij-vorm vt van zitten =?','zaten','zitte','zat','zaten','c'),
+('13','5','Vt hij vorm van pakken=?','pakte','pakken','pakten','pikte','a'),
+('14','5','Ik vorm van gooien=?','gooide','gooi','gooien','gooiden','c'),
+('15','5','Vt wij-vorm van juichen=?','Juichden','juichen','juicht','joogden','a');
 
 insert into user values 
 ('1','admin','92668751');
