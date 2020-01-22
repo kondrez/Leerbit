@@ -19,6 +19,7 @@ public class optionScreen {
     private JButton button_import;
     private JButton button_addStudent;
     private JButton button_addCourse;
+    private JButton button_addQuestions;
     private static String bestandLocatie = "C:\\test\\";
 
     optionScreen(JFrame optie) throws SQLException {
@@ -107,11 +108,23 @@ public class optionScreen {
         button_addCourse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame exercises = new JFrame("opdrachten scerm");
+                JFrame exercises = new JFrame("opdrachten scherm");
                 exercises.setContentPane(new exercisesScreen(exercises).panel_opdrachten);
                 exercises.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 exercises.pack();
                 exercises.setVisible(true);
+                optie.dispose();
+            }
+        });
+
+        button_addQuestions.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame assignment = new JFrame("vragen scherm");
+                assignment.setContentPane(new assignmentScreen(assignment).Jpanel_vragen);
+                assignment.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                assignment.pack();
+                assignment.setVisible(true);
                 optie.dispose();
             }
         });
