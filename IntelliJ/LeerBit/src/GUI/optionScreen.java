@@ -204,21 +204,21 @@ public class optionScreen {
         assert false;
         writeToFile(listToArray(data_leerling), bestandLocatie + "leerling.csv");
 
-        // De tabel score uitlezen
-        rs = dataBase.executeQuery("Select * from score");
-
-        while (rs.next()) {
-            String id = rs.getString("leerling_nummer");
-            String vak_nummer = rs.getString("vak_nummer");
-            String aantal_goed = rs.getString("aantal_goed");
-
-            data_score.add(id + "," + vak_nummer + "," + aantal_goed);
-        }
-
-        deleteFile(bestandLocatie + "score.csv");
-
-        assert false;
-        writeToFile(listToArray(data_score), bestandLocatie + "score.csv");
+//        // De tabel score uitlezen
+//        rs = dataBase.executeQuery("Select * from score");
+//
+//        while (rs.next()) {
+//            String id = rs.getString("leerling_nummer");
+//            String vak_nummer = rs.getString("vak_nummer");
+//            String aantal_goed = rs.getString("aantal_goed");
+//
+//            data_score.add(id + "," + vak_nummer + "," + aantal_goed);
+//        }
+//
+//        deleteFile(bestandLocatie + "score.csv");
+//
+//        assert false;
+//        writeToFile(listToArray(data_score), bestandLocatie + "score.csv");
 
         //vragen uitlezen
         rs = dataBase.executeQuery("Select opdracht, antwoord1, antwoord2, antwoord3," +
@@ -258,7 +258,6 @@ public class optionScreen {
                 // naar de volgende regel van rs
                 rs.next();
             }
-
             teller++;
         }
 

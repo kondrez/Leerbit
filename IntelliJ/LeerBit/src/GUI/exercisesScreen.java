@@ -54,6 +54,8 @@ public class exercisesScreen {
                     ex.printStackTrace();
                 }
                 System.out.println("course add sucessfull");
+
+                JOptionPane.showMessageDialog(panel_opdrachten, "course added sucessfully");
             }
         });
     }

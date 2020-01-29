@@ -56,6 +56,12 @@ public class questionsScreen {
                 }
 
                 vraagNummer++;
+
+                textField_vraag.setText("");
+                textField_a.setText("");
+                textField_b.setText("");
+                textField_c.setText("");
+                textField_d.setText("");
             }
         });
 
